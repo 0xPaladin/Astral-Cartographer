@@ -1,0 +1,16 @@
+{
+  "name": "astral-cartographer",
+  "version": "0.1.0",
+  "description": "Astral Cartographer — a star-sector map mod for Azgaar's Fantasy Map Generator: the same world generator, reskinned as a sci-fi star map.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot src/server/index.ts",
+    "typecheck": "bun node_modules/typescript/bin/tsc --noEmit",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "typescript": "^5.9.3"
+  }
+}
