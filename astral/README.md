@@ -6,24 +6,49 @@ generator.
 
 ## Where it is now
 
-The mod registers the three name bases into FMG's `Names.nameBases`, so a
-culture can be pointed at **AstralTrek**, **AstralJammer** or **Grimdark**
-and the whole map takes its flavour from there. Nothing else yet — the
+The mod ships **three culture sets** and the **name bases** underneath them,
+and offers the sets in FMG's "Cultures set" dropdown. Nothing else yet — the
 visual reskin and the data mapping are the next steps.
 
 ```
 astral/
   entry.ts        the one module FMG loads; boots the mod, exposes window.Astral
   name-bases.ts   our bases in FMG's shape, and how they are registered
-  content/        the content — today: the three name bases
-    name-bases/
-      types.ts              the content model: a base with groups
-      astral-trek.ts        the clean, optimistic register
-      astral-jammer.ts      the psychedelic, deep-space register
-      grimdark.ts           the harsh, industrial register
+  sets.ts         our sets as FMG culture sets: the cultures, and where they go
+  payload.ts      the whole mod's data as one JSON: bases, and sets with the
+                  base ids linked — what gets pushed into FMG on load
+  content/naming/ the content
+    types.ts              the model: a set, a base, a culture, a group
+    astral-trek.ts        the set, and its four bases
+    astral-jammer.ts      the set, and its four bases
+    grimdark.ts           the set, and its four bases
+    index.ts              the registry
+  ui/             the page-facing wiring (the culture set dropdown)
   build/          bundle + inject pipeline (see ../README.md)
   dev/            dev-only: reload the page when the bundle changes
 ```
+
+## The shape of the content
+
+FMG has two levels, and so do we:
+
+- a **set** — what the user picks. FMG's are "High Fantasy", "Dark Fantasy";
+  ours are AstralTrek, AstralJammer, Grimdark. A set is a bundle of
+  cultures, each bound to a name base.
+- a **base** — a vocabulary. One people, one register, one pool of names per
+  kind of thing (`systems` and `polities`).
+
+```
+AstralTrek                      a set
+├── Trek Core          a base   classical stars, federations
+├── Trek Terran        a base   modern settlement names
+├── Trek Continental    a base   modern settlement names, another Europe
+└── Trek Synthetic      a base   machine designations
+```
+
+Each set holds eight cultures, two per base — the way FMG's High Fantasy
+gives Elves two cultures and Dwarves two. Each culture says where its
+homeland goes (`temperate`, `harsh`, `remote`, `any`).
 
 ## What the mod will do
 
@@ -50,12 +75,16 @@ modify FMG's source:
 | `window.MAP_COMMANDS` | add entries to FMG's command palette / hotkey system |
 | `window.LAYER_TOGGLES` | give a custom layer a label and a hotkey |
 
-## Two rules shape this folder
+## Three rules shape this folder
 
-1. **The content is data, not code.** The name bases are plain TS objects
+1. **The content is data, not code.** The sets and bases are plain TS objects
    with pools of names; the mod reads them and hands them to FMG. Adding a
-   fourth register is a new file, not a new module.
+   fourth set is a new file, not a new module.
 2. **FMG's data model is the contract.** The mod reads FMG's live objects
-   (`Names`, `pack`, `Layers`) and writes back through them, rather than
-   keeping a parallel copy of the world. That is what lets a saved `.map`
-   keep working, and what lets the next step reuse FMG's own generator.
+   (`Names`, `Cultures`, `options`, `pack`) and writes back through them,
+   rather than keeping a parallel copy of the world. That is what lets a saved
+   `.map` keep working, and what lets the next step reuse FMG's own
+   generator.
+3. **FMG's globals are replaced, not mutated.** `options` is swapped wholesale
+   when a map is loaded, so the mod reads every global at the moment it uses
+   it. Capturing one at boot is a bug that waits for the first map load.

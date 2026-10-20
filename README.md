@@ -3,9 +3,9 @@
 **A star-sector map mod for
 [Azgaar's Fantasy Map Generator](https://azgaar.github.io/Fantasy-Map-Generator/).**
 
-> **Status: barebones.** This repository currently holds the harness only — the
-> vendored FMG client, a dev server, and a README. The mod itself is built
-> next, step by step.
+> **Status: the naming layer.** The harness, the mod pipeline, and the
+> content model — three culture sets and the twelve name bases under them —
+> are working. The visual reskin and the data mapping are the next steps.
 
 ---
 
@@ -78,7 +78,9 @@ Astral-Cartographer/
 ├── astral/                the mod
 │   ├── entry.ts           the one module FMG loads
 │   ├── name-bases.ts      our bases, in FMG's shape, and how they are registered
-│   ├── content/           the content — today: the three name bases
+│   ├── sets.ts            our sets as FMG culture sets
+│   ├── content/naming/    the content — today: the sets and their bases
+│   ├── ui/                the page-facing wiring
 │   ├── build/             bundle + inject pipeline
 │   └── dev/               dev-only: reload the page when the bundle changes
 ├── maps/source/           where you drop a pinned world save (gitignored)
@@ -105,17 +107,26 @@ Serve-time transforms on `index.html` (in `src/server/fmg.ts`):
 
 ---
 
-## The name bases
+## The naming content
 
-The mod's first content: **three name bases**, registered into FMG's
-`Names.nameBases` alongside the stock ones. FMG's Namesbase Editor (Tools ▸
-Namesbase) lists them at the bottom, and a culture can be pointed at one.
+The mod's content so far: **three sets**, and the **bases** underneath them.
 
-| Base | The register | Shape of the names |
+This mirrors FMG's own structure exactly. FMG offers bundles of cultures
+("High Fantasy", "Dark Fantasy"), and each culture in a bundle is bound to a
+name base — High Fantasy holds 17 cultures drawn from 12 bases (Elven, Dark
+Elven, Dwarven, Goblin, Orc…), Dark Fantasy holds 34 candidates over 25. The
+"group of name bases" you see in FMG is a **culture set**.
+
+| Set | Bases under it | The register |
 |---|---|---|
-| **AstralTrek** | clean, optimistic classic sci-fi | classical stars, the constellations that named them, survey catalogues — short, bright, legible |
-| **AstralJammer** | psychedelic, deep space | named deep-sky objects and invented soft-alien names — long vowels, late consonants |
-| **Grimdark** | harsh, industrial | foundries, yards, dead lights; polities that are holdings and chapters, not federations |
+| **AstralTrek** | Trek Core, Trek Terran, Trek Continental, Trek Synthetic | modern people and invented ones |
+| **AstralJammer** | Jammer Deep, Jammer Ethereal, Jammer Stoneborn, Jammer Wild | the high-fantasy bases, reskinned |
+| **Grimdark** | Grimdark Core, Grimdark Gothic, Grimdark Iron, Grimdark Machine | the dark-fantasy bases, reskinned, and new ones |
+
+Each set holds eight cultures, two per base — the way FMG's High Fantasy
+gives Elves two cultures and Dwarves two. Each culture says where its
+homeland goes (`temperate`, `harsh`, `remote`, `any`) and how eagerly it
+claims land.
 
 ### Groups
 
@@ -126,7 +137,8 @@ Federation" as a town). So each of our bases carries **groups**:
 
 ```ts
 {
-  name: "AstralTrek",
+  name: "Trek Core",
+  set: "AstralTrek",
   min: 4,
   max: 12,
   d: "lnrs",
@@ -144,40 +156,87 @@ cultures get named from it instead of from the capital's system name.
 
 ### Rules the content obeys
 
-Enforced by `test/name-bases.test.ts`, because each of them was a real bug
-first:
+Enforced by `test/naming.test.ts`, because each of them was a real bug first:
 
 - **no digits in a pool.** A number becomes a free-floating fragment for
   FMG's Markov chain, and the generator starts producing "Re 128" and
   "Sanic 465". The numbered catalogue designations (Wolf 359, Messier 42) are
   held back for a future catalogue group, where nothing chains them into a
   system name.
-- **enough names for variety** — 100+ per systems pool, 40+ per polities pool
-  (FMG's own analysis calls 100–400 "good"; below 100 the chain repeats).
+- **no name shared between two bases** — two systems with the same name on one
+  map is a bug, and a base that shares a name with another base is how that
+  happens.
+- **enough names for variety** — 50+ per systems pool, 18+ per polities pool.
+  (FMG's own analysis calls 100–400 "good"; a base that names one culture's
+  settlements needs far less than a base that names a whole map, but below 50
+  the chain starts repeating itself.)
 - **no duplicates**, and no name the `.map` save format cannot carry (`|`
   and `/` are forbidden).
 - **a sane length window**, and only letters that may double.
 
 ### Using one
 
-Point a culture at a base and the map takes its flavour from there:
+Pick a set in FMG's **Cultures set** dropdown (options ▸ Cultures), then
+regenerate the cultures. The dropdown now offers *All-world, European, …,
+AstralTrek, AstralJammer, Grimdark*, and the set you choose decides which
+peoples the world has and which vocabulary each of them names things from.
 
+The choice is remembered between sessions. It cannot travel inside a `.map`
+yet: FMG validates the set id against a schema built at load time, so a set of
+ours is repaired to a stock one when a map is read — the mod puts it back
+afterwards, and the map's own cultures are untouched.
+
+### Registration — the payload, pushed on load
+
+Installing a name base in FMG by hand is four steps: download the file, open
+Tools ▸ Namebase, paste the names, set the lengths. The mod does it without
+the ceremony: it **pushes a payload** into FMG when the page loads, and again
+whenever a map is loaded.
+
+The payload is one JSON object, and it is exactly what FMG's own format
+expects:
+
+```jsonc
+{
+  "bases": [
+    // our bases in FMG's own shape, with the ids they were pushed at
+    { "name": "Trek Core", "i": 43, "min": 4, "max": 12, "d": "lnrs", "m": 0, "b": "Vega,Sirius,…" }
+  ],
+  "sets": [
+    // our sets, with every culture's base id resolved against the pushed array
+    { "name": "AstralTrek", "max": 8, "cultures": [
+        { "name": "Terran (Human)", "base": 44, "shield": "heater", "odd": 1, "placement": "temperate" }
+    ]}
+  ],
+  "text": "Trek Core|4|12|lnrs|0|Vega,Sirius,…"   // FMG's namesbase file format
+}
 ```
-cultures-generator → pick a culture → Name base → AstralTrek
+
+- `bases` is assigned to `Names.nameBases` in **one push** — the stock bases
+  are kept as they are (including any the user edited in the map being
+  loaded), ours are appended or replaced in place.
+- `sets` is what the dropdown is built from, and each culture's **base id**
+  points at a real base in the array that was pushed — not at a name that has
+  to be looked up again.
+- `text` is the same bases in FMG's namesbase file format, so the payload can
+  be downloaded and installed by hand in any FMG, ours or stock.
+
+In the browser console:
+
+```js
+Astral.payload()    // the payload as JSON, built against the live array
+Astral.download()   // download it in FMG's namesbase file format
 ```
 
-From then on that culture's towns, its state and its province are named in
-that register. Stock bases stay exactly where they were, so a base index
-already saved in a map still means the same base.
+The push survives a map load: FMG replaces the whole `Names.nameBases` array
+when it reads a save, so the mod replaces the array with an accessor that
+re-pushes on every assignment — the one seam that makes "our bases are always
+there" true without patching FMG itself.
 
-### Registration
-
-Our bases are **appended**, and the registration survives a map load. FMG
-replaces the whole `Names.nameBases` array when it reads a save, so a base
-that was only added at boot would vanish the moment a map was opened. The mod
-therefore replaces the array with an accessor that re-merges our bases on
-every assignment — the one seam that makes "our bases are always there" true
-without patching FMG itself.
+**One thing the push cannot do:** pin the set. FMG's pin schema only knows
+its own set ids, so the lock icon refuses to store ours. The mod keeps an
+explicit choice instead — the set you pick stays picked on the next map —
+and remembers it between sessions.
 
 ---
 
@@ -266,8 +325,8 @@ Built in steps, each one leaving the project working.
 | # | Step | What lands |
 |---|---|---|
 | 0 | **Harness** ✅ | README, dev server, vendored FMG |
-| 1 | **Vocabulary** ✅ | the three name bases, with their groups, registered into FMG — *this step* |
-| 2 | **Data mapping** | read FMG's burgs as star systems: population → star class, features → system traits, state → polity, and name cultures and states from the `polities` group |
+| 1 | **Naming** ✅ | three culture sets and the twelve bases under them, registered into FMG and offered in the Cultures set dropdown — *this step* |
+| 2 | **Data mapping** | read FMG's burgs as star systems: population → star class, features → system traits, and name states and cultures from the `polities` group instead of from the capital's name |
 | 3 | **Visual reskin** | the galactic plane: void background, nebula fields, system markers, system labels — a new FMG layer |
 | 4 | **Style presets** | sci-fi map styles (dark chart, sensor sweep, blueprint) as FMG style presets |
 | 5 | **Generators** | the generators themselves: "elevation" → star density, "rivers" → hyperlanes, "mountains" → nebulae |

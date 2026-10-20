@@ -12,7 +12,7 @@
  * assignment — the one seam that makes "our bases are always present" true
  * without patching FMG itself.
  */
-import { ASTRAL_NAME_BASES, poolString, type AstralNameBase, type AstralNameGroup } from "./content/name-bases/index.ts";
+import { ASTRAL_NAME_BASES, poolString, type AstralNameBase, type AstralNameGroup } from "./content/naming/index.ts";
 
 /** The shape FMG keeps in `Names.nameBases`. */
 export interface FmgNameBase {

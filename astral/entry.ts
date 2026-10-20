@@ -1,21 +1,30 @@
 /**
  * entry.ts — the one module FMG loads.
  *
- * Everything the mod does to the page starts here. For now that is a single
- * job: register Astral Cartographer's name bases into FMG's `Names`, so a
- * culture can be pointed at AstralTrek, AstralJammer or Grimdark and the
- * whole map takes its flavour from there.
+ * Everything the mod does to the page starts here. For now that is two jobs:
+ * register Astral Cartographer's name bases into FMG's `Names`, and offer our
+ * culture sets in FMG's "Cultures set" dropdown — so a world generated with
+ * the AstralTrek set has its peoples named from the Trek bases, the Jammer
+ * set from the Jammer bases, and Grimdark from Grimdark.
  */
-import { ASTRAL_NAME_BASES, poolOf, type AstralNameBase, type AstralNameGroup } from "./content/name-bases/index.ts";
+import { ASTRAL_NAME_BASES, ASTRAL_NAME_SETS, poolOf, type AstralNameBase, type AstralNameGroup } from "./content/naming/index.ts";
 import { installNameBases, type FmgNames } from "./name-bases.ts";
+import { buildPayload, downloadPayload, type AstralPayload } from "./payload.ts";
+import { installCultureSets } from "./ui/culture-sets.ts";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 /** The mod's public surface, exposed on `window.Astral` for the console. */
 export interface AstralApi {
   version: string;
+  /** the sets this mod ships */
+  sets: typeof ASTRAL_NAME_SETS;
   /** the bases this mod ships */
   nameBases: AstralNameBase[];
+  /** the whole mod's data, as JSON: bases, and sets with their base ids linked */
+  payload(): AstralPayload;
+  /** download the bases in FMG's namesbase file format, for a manual install */
+  download(): void;
   /** the pool of one group of one base */
   pool(baseName: string, group: AstralNameGroup): string[];
   /** register the bases again (after a map load, or by hand) */
@@ -39,11 +48,18 @@ function boot(): void {
     return;
   }
 
+  // The payload is pushed into FMG, and read back out of it: the ids it
+  // carries are the ids the bases actually occupy.
   installNameBases(names);
+  const payload = buildPayload(names);
+  const sets = installCultureSets(names, payload);
 
   window.Astral = {
     version: VERSION,
+    sets: ASTRAL_NAME_SETS,
     nameBases: ASTRAL_NAME_BASES,
+    payload: () => buildPayload(names),
+    download: () => downloadPayload(buildPayload(names)),
     pool: (baseName, group) => {
       const base = ASTRAL_NAME_BASES.find((candidate) => candidate.name === baseName);
       return base ? poolOf(base, group) : [];
@@ -54,7 +70,7 @@ function boot(): void {
   };
 
   console.info(
-    `Astral Cartographer ${VERSION}: registered ${ASTRAL_NAME_BASES.length} name bases — ${ASTRAL_NAME_BASES.map((base) => base.name).join(", ")}`,
+    `Astral Cartographer ${VERSION}: pushed ${payload.bases.length} name bases in ${sets.length} culture sets — ${ASTRAL_NAME_SETS.map((set) => set.name).join(", ")}`,
   );
 }
 
