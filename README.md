@@ -70,12 +70,19 @@ live, with no restart, and served only to your own browser.
 ```
 Astral-Cartographer/
 ├── README.md              this file
-├── package.json           bun scripts: dev, test, typecheck
+├── package.json           bun scripts: dev, build, test, typecheck
 ├── tsconfig.json
 ├── clients/fmg/dist/      the vendored FMG client (committed, ~23 MB)
+│   └── astral/astral.js   the built mod bundle (committed)
 ├── src/server/            the dev harness: serves the client, redirects the root
+├── astral/                the mod
+│   ├── entry.ts           the one module FMG loads
+│   ├── name-bases.ts      our bases, in FMG's shape, and how they are registered
+│   ├── content/           the content — today: the three name bases
+│   ├── build/             bundle + inject pipeline
+│   └── dev/               dev-only: reload the page when the bundle changes
 ├── maps/source/           where you drop a pinned world save (gitignored)
-└── astral/                the mod — to be written
+└── test/                  unit tests
 ```
 
 The dev server is deliberately tiny. It has no product API: the mod runs
@@ -98,6 +105,82 @@ Serve-time transforms on `index.html` (in `src/server/fmg.ts`):
 
 ---
 
+## The name bases
+
+The mod's first content: **three name bases**, registered into FMG's
+`Names.nameBases` alongside the stock ones. FMG's Namesbase Editor (Tools ▸
+Namesbase) lists them at the bottom, and a culture can be pointed at one.
+
+| Base | The register | Shape of the names |
+|---|---|---|
+| **AstralTrek** | clean, optimistic classic sci-fi | classical stars, the constellations that named them, survey catalogues — short, bright, legible |
+| **AstralJammer** | psychedelic, deep space | named deep-sky objects and invented soft-alien names — long vowels, late consonants |
+| **Grimdark** | harsh, industrial | foundries, yards, dead lights; polities that are holdings and chapters, not federations |
+
+### Groups
+
+FMG's own name base is a flat pool of source names — one flavour, no
+structure. A star map needs two: a **star system** is a place, a **polity** is
+an institution, and a single pool would blend them into nonsense ("Vega
+Federation" as a town). So each of our bases carries **groups**:
+
+```ts
+{
+  name: "AstralTrek",
+  min: 4,
+  max: 12,
+  d: "lnrs",
+  groups: {
+    systems:  ["Vega", "Sirius", "Rigel", "Proxima Centauri", …],
+    polities: ["United Federation", "Solar Compact", "Core Worlds", …],
+  },
+}
+```
+
+FMG sees the `systems` group flattened into a normal pool — that is the
+vocabulary its generator chains into names — while the mod keeps the groups
+apart. The `polities` group is there for the next step, when states and
+cultures get named from it instead of from the capital's system name.
+
+### Rules the content obeys
+
+Enforced by `test/name-bases.test.ts`, because each of them was a real bug
+first:
+
+- **no digits in a pool.** A number becomes a free-floating fragment for
+  FMG's Markov chain, and the generator starts producing "Re 128" and
+  "Sanic 465". The numbered catalogue designations (Wolf 359, Messier 42) are
+  held back for a future catalogue group, where nothing chains them into a
+  system name.
+- **enough names for variety** — 100+ per systems pool, 40+ per polities pool
+  (FMG's own analysis calls 100–400 "good"; below 100 the chain repeats).
+- **no duplicates**, and no name the `.map` save format cannot carry (`|`
+  and `/` are forbidden).
+- **a sane length window**, and only letters that may double.
+
+### Using one
+
+Point a culture at a base and the map takes its flavour from there:
+
+```
+cultures-generator → pick a culture → Name base → AstralTrek
+```
+
+From then on that culture's towns, its state and its province are named in
+that register. Stock bases stay exactly where they were, so a base index
+already saved in a map still means the same base.
+
+### Registration
+
+Our bases are **appended**, and the registration survives a map load. FMG
+replaces the whole `Names.nameBases` array when it reads a save, so a base
+that was only added at boot would vanish the moment a map was opened. The mod
+therefore replaces the array with an accessor that re-merges our bases on
+every assignment — the one seam that makes "our bases are always there" true
+without patching FMG itself.
+
+---
+
 ## The vendored fork
 
 `clients/fmg/dist` is a **prebuilt copy of FMG 1.154.x** with a small,
@@ -117,6 +200,12 @@ OpenConquest: the OpenConquest mod bundle was stripped out of the copy
 with no mod loaded — which is exactly the blank canvas this project starts
 from.
 
+Our own mod is injected on top of that, the same way: one base-relative
+`<script type="module" src="./astral/astral.js">` tag in the built
+`index.html`, and the bundle next to it in `clients/fmg/dist/astral/`. The
+tag is relative, so one build works under our dev server, FMG's own site, and
+Electron.
+
 ### Upgrading FMG
 
 The vendored build is a snapshot. To move to a newer FMG:
@@ -130,16 +219,21 @@ npx vite build --base=/fmg/
 ```
 
 Re-applying the patches is the fiddly part, and it is worth doing properly
-when the first real mod lands: the patches are ~80 lines of diff in total.
+now that the mod exists: the patches are ~80 lines of diff in total.
 
-### Rebuilding the fork
+### Rebuilding the mod
 
-There is no build step in this repo yet — the vendored build is used as-is.
-When the mod source lands, the pipeline will mirror OpenConquest's:
-apply patches → `vite build` → bundle `astral/` into
-`clients/fmg/dist/astral/astral.js` → inject one `<script type="module">` tag
-into the built `index.html`. The tag is base-relative, so one build works
-under our dev server, FMG's own site, and Electron.
+The FMG client itself is not rebuilt here — the vendored build is used as-is.
+Only the mod on top of it is built:
+
+```sh
+bun run build          # bundle astral/ → clients/fmg/dist/astral/astral.js,
+                       # and inject the module tag into the built index.html
+bun run build:watch    # the same, and rebundle on every change
+```
+
+Both are idempotent: the injection is skipped when the tag is already there,
+and `bun dev` runs the same build on boot, so the working tree stays clean.
 
 ---
 
@@ -148,13 +242,20 @@ under our dev server, FMG's own site, and Electron.
 ```sh
 bun install        # once
 bun dev            # the dev server, with hot reload
+bun run build      # build the mod bundle into clients/fmg/dist
 bun test           # unit tests
 bun typecheck      # tsc --noEmit
 ```
 
-`bun dev` serves the committed build, so it works straight from a fresh clone.
-The build is picked up live: the server caches the transformed `index.html` by
-mtime, so replacing `clients/fmg/dist/` is enough — no restart.
+`bun dev` serves the committed build, so it works straight from a fresh
+clone — and it also rebuilds the mod bundle whenever anything under `astral/`
+changes, so editing the mod needs no second command. The page reloads itself
+when the bundle changes (a module boundary is a reload, not a hot swap).
+
+`bun run build` is the release build: bundle `astral/` into
+`clients/fmg/dist/astral/astral.js` and inject the one module tag into the
+built `index.html`. The bundle is committed, so a fresh clone is already
+modded. `bun run build:watch` does the same and keeps watching.
 
 ---
 
@@ -164,9 +265,9 @@ Built in steps, each one leaving the project working.
 
 | # | Step | What lands |
 |---|---|---|
-| 0 | **Harness** ✅ | README, dev server, vendored FMG — *this commit* |
-| 1 | **Vocabulary** | the sci-fi content: name bases for star systems and polities, species, system classes, prefixes/suffixes, a "galaxy" flavour |
-| 2 | **Data mapping** | read FMG's burgs as star systems: population → star class/size, features → system traits, state → polity |
+| 0 | **Harness** ✅ | README, dev server, vendored FMG |
+| 1 | **Vocabulary** ✅ | the three name bases, with their groups, registered into FMG — *this step* |
+| 2 | **Data mapping** | read FMG's burgs as star systems: population → star class, features → system traits, state → polity, and name cultures and states from the `polities` group |
 | 3 | **Visual reskin** | the galactic plane: void background, nebula fields, system markers, system labels — a new FMG layer |
 | 4 | **Style presets** | sci-fi map styles (dark chart, sensor sweep, blueprint) as FMG style presets |
 | 5 | **Generators** | the generators themselves: "elevation" → star density, "rivers" → hyperlanes, "mountains" → nebulae |

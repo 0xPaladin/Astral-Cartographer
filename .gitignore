@@ -5,6 +5,10 @@ node_modules
 # The built fork in clients/fmg/dist IS tracked, so this is only needed to rebuild.
 /fmg-src
 
+# Dev-server bookkeeping: written by the mod build next to the bundle, changes
+# on every rebuild. The bundle itself IS tracked.
+/clients/fmg/dist/astral/build-id.txt
+
 # output
 out
 /dist

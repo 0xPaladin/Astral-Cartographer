@@ -17,6 +17,7 @@
 import { existsSync, openSync, readSync, closeSync } from "node:fs";
 import path from "node:path";
 import { serveFmg } from "./fmg.ts";
+import { startModBuild } from "./mod-build.ts";
 
 const PORT = Number(process.env.PORT ?? 3445);
 
@@ -81,6 +82,10 @@ function fmgBootRedirect(): Response {
     headers: { Location: FMG_BOOT_PATH, "Cache-Control": "no-cache" },
   });
 }
+
+// The mod bundle is rebuilt on change, so `bun dev` is the only command
+// needed: edit a file under astral/ and the page reloads itself.
+startModBuild();
 
 const server = Bun.serve({
   port: PORT,

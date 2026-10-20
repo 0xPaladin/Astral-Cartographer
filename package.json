@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "bun --hot src/server/index.ts",
+    "build": "bun run astral/build/build.ts",
+    "build:watch": "bun run astral/build/build.ts -- --watch",
     "typecheck": "bun node_modules/typescript/bin/tsc --noEmit",
     "test": "bun test"
   },

@@ -1,11 +1,29 @@
 # `astral/` — the mod
 
-This folder will hold **Astral Cartographer** itself: the one JavaScript module
+This folder holds **Astral Cartographer** itself: the one JavaScript module
 that is injected into the vendored FMG build and turns it into a star-sector
 generator.
 
-It is empty for now — the project starts as a bare harness (README, dev
-server, vendored FMG) and the mod is built up piece by piece from here.
+## Where it is now
+
+The mod registers the three name bases into FMG's `Names.nameBases`, so a
+culture can be pointed at **AstralTrek**, **AstralJammer** or **Grimdark**
+and the whole map takes its flavour from there. Nothing else yet — the
+visual reskin and the data mapping are the next steps.
+
+```
+astral/
+  entry.ts        the one module FMG loads; boots the mod, exposes window.Astral
+  name-bases.ts   our bases in FMG's shape, and how they are registered
+  content/        the content — today: the three name bases
+    name-bases/
+      types.ts              the content model: a base with groups
+      astral-trek.ts        the clean, optimistic register
+      astral-jammer.ts      the psychedelic, deep-space register
+      grimdark.ts           the harsh, industrial register
+  build/          bundle + inject pipeline (see ../README.md)
+  dev/            dev-only: reload the page when the bundle changes
+```
 
 ## What the mod will do
 
@@ -13,9 +31,9 @@ server, vendored FMG) and the mod is built up piece by piece from here.
   become star charts: a galactic plane instead of a coastline, nebulae instead
   of forests, star systems instead of towns.
 - **Re-read the content** — every FMG concept gets a sci-fi meaning. Burgs
-  become **star systems**, states become **polities/factions**, provinces become
-  **sectors**, rivers become **hyperlanes**, mountains become **nebulae or
-  gas giants**, deserts become **the void**.
+  become **star systems**, states become **polities/factions**, provinces
+  become **sectors**, rivers become **hyperlanes**, mountains become **nebulae
+  or gas giants**, deserts become **the void**.
 - **Stay a map tool** — this is not a wargame. The mod edits and renders a
   map; it does not simulate a campaign.
 
@@ -32,12 +50,12 @@ modify FMG's source:
 | `window.MAP_COMMANDS` | add entries to FMG's command palette / hotkey system |
 | `window.LAYER_TOGGLES` | give a custom layer a label and a hotkey |
 
-## Shape of the code (when it arrives)
+## Two rules shape this folder
 
-```
-astral/
-  entry.ts        the one module FMG loads
-  ui/             layers, style, panels — everything that touches the DOM
-  content/        the sci-fi vocabulary: names, species, polity prefixes, …
-  build/          the fork pipeline (bundle + inject), if we need one
-```
+1. **The content is data, not code.** The name bases are plain TS objects
+   with pools of names; the mod reads them and hands them to FMG. Adding a
+   fourth register is a new file, not a new module.
+2. **FMG's data model is the contract.** The mod reads FMG's live objects
+   (`Names`, `pack`, `Layers`) and writes back through them, rather than
+   keeping a parallel copy of the world. That is what lets a saved `.map`
+   keep working, and what lets the next step reuse FMG's own generator.
