@@ -681,16 +681,24 @@ export const trekSynthetic: AstralNameBase = {
 /** The set: the clean, optimistic register, and the peoples under it. */
 export const astralTrek: AstralNameSet = {
   name: "AstralTrek",
-  max: 8,
+  max: 16,
   probability: 11,
   cultures: [
     { name: "Terran (Human)", base: "Trek Terran", shield: "heater", odd: 1, placement: "temperate" },
     { name: "Colonial (Human)", base: "Trek Terran", shield: "kite", odd: 0.8, placement: "any" },
+    { name: "Expatriate (Human)", base: "Trek Terran", shield: "pennant", odd: 0.6, placement: "remote" },
+    { name: "Borderlands (Human)", base: "Trek Terran", shield: "dovetail", odd: 0.5, placement: "harsh" },
     { name: "Continental (Human)", base: "Trek Continental", shield: "french", odd: 0.9, placement: "temperate" },
     { name: "Highlander (Human)", base: "Trek Continental", shield: "hessen", odd: 0.6, placement: "harsh" },
+    { name: "Southerners (Human)", base: "Trek Continental", shield: "spanish", odd: 0.6, placement: "temperate" },
+    { name: "Islanders (Human)", base: "Trek Continental", shield: "horsehead", odd: 0.5, placement: "remote" },
     { name: "Synthetic (Machine)", base: "Trek Synthetic", shield: "hexagon", odd: 0.7, placement: "any" },
     { name: "Posthuman (Machine)", base: "Trek Synthetic", shield: "diamond", odd: 0.5, placement: "remote" },
+    { name: "Swarm (Machine)", base: "Trek Synthetic", shield: "square", odd: 0.4, placement: "harsh" },
+    { name: "Archive (Machine)", base: "Trek Synthetic", shield: "embowed", odd: 0.4, placement: "any" },
     { name: "Core Worlds (Mixed)", base: "Trek Core", shield: "gonfalon", odd: 0.8, placement: "any" },
     { name: "Inner Reach (Mixed)", base: "Trek Core", shield: "banner", odd: 0.6, placement: "remote" },
+    { name: "Old Republic (Mixed)", base: "Trek Core", shield: "renaissance", odd: 0.5, placement: "temperate" },
+    { name: "Solar Compact (Mixed)", base: "Trek Core", shield: "baroque", odd: 0.5, placement: "any" },
   ],
 };

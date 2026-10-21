@@ -3,9 +3,10 @@
 **A star-sector map mod for
 [Azgaar's Fantasy Map Generator](https://azgaar.github.io/Fantasy-Map-Generator/).**
 
-> **Status: the naming layer.** The harness, the mod pipeline, and the
-> content model — three culture sets and the twelve name bases under them —
-> are working. The visual reskin and the data mapping are the next steps.
+> **Status: the panel and the action.** The harness, the content model (three
+> culture sets, twelve name bases), and the panel that applies them to a map
+> are working. The visual reskin — the galactic plane, the nebulae, the
+> system markers — is the next step.
 
 ---
 
@@ -65,6 +66,51 @@ live, with no restart, and served only to your own browser.
 
 ---
 
+## How it works
+
+**The map is built with stock FMG.** Generate a world, edit it, shape it —
+all of FMG, none of the mod. Then open the mod's panel and press **Apply**:
+
+```
+Tools ▸ Astral Cartographer        (or press Space and type "astral")
+```
+
+```
+┌─ Astral Cartographer ────────────────────┐
+│ Name set:    [ AstralTrek        ▾ ]      │
+│ [x] Replace the peoples of the map         │
+│ Apply:      [ Apply ]                     │
+│ Applied AstralTrek: 13 peoples replaced,  │
+│ 602 systems renamed, 40 polities named…    │
+└────────────────────────────────────────────┘
+```
+
+**Apply** is the whole mod, and it is made of Azgaar's own methods — the mod
+does not keep a parallel world, it changes FMG's:
+
+| | |
+|---|---|
+| `Cultures.remove` / `add` / `rename` / `setBase` | the peoples of the map: the stock ones go, ours take their place, where they used to live |
+| `Cultures.recalculate` | where the new peoples grow |
+| `States.recalculate` | the states they hold |
+| `Burgs.rename` | the systems they name — Azgaar's own name generation, from the new people's base |
+| `States.rename` / `setForm` | the polities they name |
+| `Provinces.regenerate` / `setForm` | the sectors they name |
+
+The order matters: the peoples change first, then the names follow, because a
+system's name comes from the people who live in it.
+
+A stock map stays a stock map until Apply is pressed: outside the action, the
+mod hands FMG its own culture list back, so a world generated in FMG is a
+world generated in FMG.
+
+**The mod's settings** — the name set, and whether Apply replaces the peoples
+or only renames what is there — are kept in the browser, not in the map: they
+are a preference of the person making the map, and a map should open the same
+way for whoever receives it.
+
+---
+
 ## What is in the box right now
 
 ```
@@ -77,10 +123,14 @@ Astral-Cartographer/
 ├── src/server/            the dev harness: serves the client, redirects the root
 ├── astral/                the mod
 │   ├── entry.ts           the one module FMG loads
+│   ├── fmg.ts             the shape of the FMG globals the mod uses
+│   ├── state.ts           the mod's settings
+│   ├── actions/apply.ts   the action the panel's Apply button runs
 │   ├── name-bases.ts      our bases, in FMG's shape, and how they are registered
 │   ├── sets.ts            our sets as FMG culture sets
+│   ├── mapping/           FMG's world, read as a star map
 │   ├── content/naming/    the content — today: the sets and their bases
-│   ├── ui/                the page-facing wiring
+│   ├── ui/panel.ts        the mod's panel
 │   ├── build/             bundle + inject pipeline
 │   └── dev/               dev-only: reload the page when the bundle changes
 ├── maps/source/           where you drop a pinned world save (gitignored)
@@ -246,7 +296,6 @@ Installing a name base in FMG by hand is four steps: download the file, open
 Tools ▸ Namebase, paste the names, set the lengths. The mod does it without
 the ceremony: it **pushes a payload** into FMG when the page loads, and again
 whenever a map is loaded.
-
 The payload is one JSON object, and it is exactly what FMG's own format
 expects:
 
@@ -379,13 +428,14 @@ Built in steps, each one leaving the project working.
 | # | Step | What lands |
 |---|---|---|
 | 0 | **Harness** ✅ | README, dev server, vendored FMG |
-| 1 | **Naming** ✅ | three culture sets and the twelve bases under them, registered into FMG and offered in the Cultures set dropdown |
-| 2 | **Data mapping** ✅ | burgs read as star systems (class from the population, traits from the installations), states as polities, provinces as sectors — *this step* |
-| 3 | **Visual reskin** | the galactic plane: void background, nebula fields, system markers, system labels — a new FMG layer |
-| 4 | **Style presets** | sci-fi map styles (dark chart, sensor sweep, blueprint) as FMG style presets |
-| 5 | **Generators** | the generators themselves: "elevation" → star density, "rivers" → hyperlanes, "mountains" → nebulae |
-| 6 | **Editor affordances** | rename FMG's UI in the map tools (burg → system, state → polity) without breaking FMG's data |
-| 7 | **Persistence** | the `.map` mod slot: the sci-fi data travels with the saved map |
+| 1 | **Naming** ✅ | three culture sets and the twelve bases under them, registered into FMG |
+| 2 | **Data mapping** ✅ | burgs read as star systems, states as polities, provinces as sectors |
+| 3 | **The panel and the action** ✅ | the mod's own UI: pick a name set, press Apply, and the map becomes a star map — *this step* |
+| 4 | **Visual reskin** | the galactic plane: void background, nebula fields, system markers, system labels — a new FMG layer |
+| 5 | **Style presets** | sci-fi map styles (dark chart, sensor sweep, blueprint) as FMG style presets |
+| 6 | **Generators** | the generators themselves: "elevation" → star density, "rivers" → hyperlanes, "mountains" → nebulae |
+| 7 | **Editor affordances** | rename FMG's UI in the map tools (burg → system, state → polity) without breaking FMG's data |
+| 8 | **Persistence** | the `.map` mod slot: the sci-fi data travels with the saved map |
 
 **Not in scope:** armies, battles, diplomacy, campaigns, turns. This is a map
 and content mod.

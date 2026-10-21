@@ -529,16 +529,24 @@ export const grimdarkMachine: AstralNameBase = {
 /** The set: the harsh, industrial register, and the peoples under it. */
 export const grimdark: AstralNameSet = {
   name: "Grimdark",
-  max: 8,
+  max: 16,
   probability: 3,
   cultures: [
     { name: "Gothic (Darkling)", base: "Grimdark Gothic", shield: "oldFrench", odd: 1, placement: "harsh" },
     { name: "Northerners (Darkling)", base: "Grimdark Gothic", shield: "horsehead", odd: 0.8, placement: "harsh" },
+    { name: "Crownlands (Darkling)", base: "Grimdark Gothic", shield: "heater", odd: 0.7, placement: "temperate" },
+    { name: "Ash Church (Darkling)", base: "Grimdark Gothic", shield: "baroque", odd: 0.5, placement: "any" },
     { name: "Iron (Foundrymen)", base: "Grimdark Iron", shield: "square", odd: 0.9, placement: "any" },
     { name: "Yard Companies (Foundrymen)", base: "Grimdark Iron", shield: "targe", odd: 0.7, placement: "any" },
+    { name: "Slag Clans (Foundrymen)", base: "Grimdark Iron", shield: "wedged", odd: 0.6, placement: "harsh" },
+    { name: "The Great Works (Foundrymen)", base: "Grimdark Iron", shield: "gonfalon", odd: 0.5, placement: "any" },
     { name: "Machine (Cold)", base: "Grimdark Machine", shield: "embowed", odd: 0.7, placement: "remote" },
     { name: "Calculators (Cold)", base: "Grimdark Machine", shield: "diamond", odd: 0.5, placement: "any" },
-    { name: "Core Holds (Mixed)", base: "Grimdark Core", shield: "gonfalon", odd: 0.8, placement: "any" },
-    { name: "Rust Kingdoms (Mixed)", base: "Grimdark Core", shield: "pavise", odd: 0.6, placement: "remote" },
+    { name: "Null Procession (Cold)", base: "Grimdark Machine", shield: "flag", odd: 0.5, placement: "remote" },
+    { name: "The Archive (Cold)", base: "Grimdark Machine", shield: "pavise", odd: 0.4, placement: "any" },
+    { name: "Core Holds (Mixed)", base: "Grimdark Core", shield: "pennant", odd: 0.8, placement: "any" },
+    { name: "Rust Kingdoms (Mixed)", base: "Grimdark Core", shield: "dovetail", odd: 0.6, placement: "remote" },
+    { name: "Old Empire (Mixed)", base: "Grimdark Core", shield: "renaissance", odd: 0.5, placement: "temperate" },
+    { name: "The Nine Sectors (Mixed)", base: "Grimdark Core", shield: "roman", odd: 0.4, placement: "harsh" },
   ],
 };

@@ -10,70 +10,18 @@
  * - **burgs** are star systems: a class from the population, traits from the
  *   installations (see systems.ts).
  *
- * The names are applied where FMG generates them — after the states and the
+ * The names are applied where FMG names them — after the states and the
  * provinces — so a map the user has edited keeps the names it has, and only
  * a fresh generation gets the new ones.
  */
 import { ASTRAL_NAME_BASES } from "../content/naming/index.ts";
-import type { FmgNames } from "../name-bases.ts";
+import type { FmgNames } from "../fmg.ts";
+import { currentPack } from "./pack.ts";
 import { polityWordFor, sectorWordFor } from "./polities.ts";
-import type { FmgBurg } from "./systems.ts";
 
-/** The slice of FMG's state the mapping reads. */
-export interface FmgState {
-  i: number;
-  name?: string;
-  formName?: string;
-  fullName?: string;
-  culture?: number;
-  removed?: boolean;
-}
-
-/** The slice of FMG's province the mapping reads. */
-export interface FmgProvince {
-  i: number;
-  name?: string;
-  formName?: string;
-  fullName?: string;
-  removed?: boolean;
-}
-
-/** The slice of FMG's pack the mapping reads. */
-export interface FmgPack {
-  states: FmgState[];
-  provinces: FmgProvince[];
-  burgs: FmgBurg[];
-  cultures: { base?: number }[];
-}
-
-/** The slice of FMG's states generator the mapping uses. */
-export interface FmgStates {
-  generate(): void;
-  regenerate?(): unknown;
-  defineStateForms?(list?: number[] | null): void;
-  setForm(stateId: number, formName: string, form?: string): void;
-}
-
-/** The slice of FMG's provinces generator the mapping uses. */
-export interface FmgProvinces {
-  generate(): void;
-  regenerate?(force?: boolean): unknown;
-  setForm(provinceId: number, formName: string): void;
-}
-
-declare global {
-  // FMG's globals, read through `globalThis` so the mod can be tested outside
-  // a browser.
-  var States: FmgStates | undefined;
-  var Provinces: FmgProvinces | undefined;
-  var Layers: { draw(...ids: string[]): void } | undefined;
-  var pack: FmgPack | undefined;
-}
-
-/** FMG's current pack — read fresh, never captured. */
-function currentPack(): FmgPack | undefined {
-  return globalThis.pack;
-}
+export { currentPack };
+export * from "./systems.ts";
+export * from "./polities.ts";
 
 /** Is this base one of ours? */
 export function isAstralBase(names: FmgNames, baseId: number | undefined): boolean {
@@ -168,21 +116,13 @@ export function installMapping(names: FmgNames): void {
   // 3. the sectors
   const provinces = globalThis.Provinces;
   if (provinces) {
-    const originalGenerate = provinces.generate.bind(provinces);
-    provinces.generate = () => {
-      originalGenerate();
-      applySectorNames();
-    };
-    const originalRegenerate = provinces.regenerate?.bind(provinces);
-    if (originalRegenerate) {
-      provinces.regenerate = (force?: boolean) => {
-        const result = originalRegenerate(force);
+    const originalGenerate = provinces.regenerate?.bind(provinces);
+    if (originalGenerate) {
+      provinces.regenerate = (regenerateNames?: boolean) => {
+        const result = originalGenerate(regenerateNames);
         applySectorNames();
         return result;
       };
     }
   }
 }
-
-export * from "./systems.ts";
-export * from "./polities.ts";

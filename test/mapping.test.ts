@@ -24,6 +24,7 @@ function fakeNames(bases: FmgNameBase[] = []): FmgNames {
     nameBases: bases,
     getNameBases: () => bases,
     getState: (name: string) => `${name}ia`,
+    getCulture: () => "Somewhere",
     clearChains: () => {},
     updateChain: () => {},
   };

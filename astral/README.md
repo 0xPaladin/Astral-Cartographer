@@ -6,17 +6,17 @@ generator.
 
 ## Where it is now
 
-The mod ships **three culture sets** and the **name bases** underneath them,
-offers the sets in FMG's "Cultures set" dropdown, and **maps FMG's world onto
-a star map**: burgs are star systems with a class and traits, states are
-polities named by their culture's own words, provinces are sectors.
-
-The visual reskin — the galactic plane, the nebulae, the system markers — is
-the next step.
+The mod has **one panel and one action**. The panel offers the three culture
+sets and a choice; the action takes a map built in stock FMG and turns it into
+a star map: the peoples are replaced with ours, the systems are renamed from
+our bases, the polities and the sectors get their own words.
 
 ```
 astral/
   entry.ts        the one module FMG loads; boots the mod, exposes window.Astral
+  fmg.ts          the shape of the FMG globals the mod uses
+  state.ts        the mod's settings: the name set, and whether to replace
+  actions/apply.ts the action the panel's Apply button runs
   name-bases.ts   our bases in FMG's shape, and how they are registered
   sets.ts         our sets as FMG culture sets: the cultures, and where they go
   payload.ts      the whole mod's data as one JSON: bases, and sets with the
@@ -24,6 +24,7 @@ astral/
   mapping/        FMG's world, read as a star map
     systems.ts          a burg as a star system: a class, and traits
     polities.ts         a state as a polity, a province as a sector
+    pack.ts             FMG's current map
     index.ts            the mapping, installed over FMG's generators
   content/naming/ the content
     types.ts              the model: a set, a base, a culture, a group
@@ -31,7 +32,7 @@ astral/
     astral-jammer.ts      the set, and its four bases
     grimdark.ts           the set, and its four bases
     index.ts              the registry
-  ui/             the page-facing wiring (the culture set dropdown)
+  ui/panel.ts     the mod's panel
   build/          bundle + inject pipeline (see ../README.md)
   dev/            dev-only: reload the page when the bundle changes
 ```
@@ -89,10 +90,9 @@ modify FMG's source:
    with pools of names; the mod reads them and hands them to FMG. Adding a
    fourth set is a new file, not a new module.
 2. **FMG's data model is the contract.** The mod reads FMG's live objects
-   (`Names`, `Cultures`, `options`, `pack`) and writes back through them,
-   rather than keeping a parallel copy of the world. That is what lets a saved
-   `.map` keep working, and what lets the next step reuse FMG's own
-   generator.
+   (`Names`, `Cultures`, `Burgs`, `States`, `pack`) and writes back through
+   them, rather than keeping a parallel copy of the world. That is what lets a
+   saved `.map` keep working.
 3. **FMG's globals are replaced, not mutated.** `options` is swapped wholesale
    when a map is loaded, so the mod reads every global at the moment it uses
    it. Capturing one at boot is a bug that waits for the first map load.

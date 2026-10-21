@@ -527,16 +527,24 @@ export const jammerWild: AstralNameBase = {
 /** The set: the psychedelic, deep-space register, and the peoples under it. */
 export const astralJammer: AstralNameSet = {
   name: "AstralJammer",
-  max: 8,
+  max: 16,
   probability: 5,
   cultures: [
     { name: "Ethereal (Kindred)", base: "Jammer Ethereal", shield: "vesicaPiscis", odd: 1, placement: "remote" },
     { name: "Silver Kin (Kindred)", base: "Jammer Ethereal", shield: "fantasy1", odd: 0.8, placement: "any" },
+    { name: "Morning Star (Kindred)", base: "Jammer Ethereal", shield: "fantasy5", odd: 0.6, placement: "remote" },
+    { name: "Long Memory (Kindred)", base: "Jammer Ethereal", shield: "fantasy3", odd: 0.5, placement: "any" },
     { name: "Stoneborn (Deep)", base: "Jammer Stoneborn", shield: "wedged", odd: 0.9, placement: "harsh" },
     { name: "Deepkin (Deep)", base: "Jammer Stoneborn", shield: "fantasy2", odd: 0.7, placement: "harsh" },
+    { name: "Ironvein (Deep)", base: "Jammer Stoneborn", shield: "square", odd: 0.6, placement: "harsh" },
+    { name: "Old Delvers (Deep)", base: "Jammer Stoneborn", shield: "hexagon", odd: 0.5, placement: "any" },
     { name: "Wild (Ferals)", base: "Jammer Wild", shield: "moriaOrc", odd: 0.8, placement: "harsh" },
     { name: "Scavengers (Ferals)", base: "Jammer Wild", shield: "fantasy4", odd: 0.6, placement: "any" },
-    { name: "Deep Choir (Collective)", base: "Jammer Deep", shield: "pavise", odd: 0.7, placement: "any" },
-    { name: "Far Chorus (Collective)", base: "Jammer Deep", shield: "fantasy5", odd: 0.5, placement: "remote" },
+    { name: "Red Clans (Ferals)", base: "Jammer Wild", shield: "targe", odd: 0.5, placement: "harsh" },
+    { name: "The Hunt (Ferals)", base: "Jammer Wild", shield: "pavise", odd: 0.4, placement: "remote" },
+    { name: "Deep Choir (Collective)", base: "Jammer Deep", shield: "gonfalon", odd: 0.7, placement: "any" },
+    { name: "Far Chorus (Collective)", base: "Jammer Deep", shield: "flag", odd: 0.5, placement: "remote" },
+    { name: "Hollow Kin (Collective)", base: "Jammer Deep", shield: "diamond", odd: 0.5, placement: "harsh" },
+    { name: "Wandering Song (Collective)", base: "Jammer Deep", shield: "dovetail", odd: 0.4, placement: "any" },
   ],
 };

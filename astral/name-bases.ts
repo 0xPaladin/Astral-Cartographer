@@ -13,27 +13,9 @@
  * without patching FMG itself.
  */
 import { ASTRAL_NAME_BASES, poolString, type AstralNameBase, type AstralNameGroup } from "./content/naming/index.ts";
+import type { FmgNameBase, FmgNames } from "./fmg.ts";
 
-/** The shape FMG keeps in `Names.nameBases`. */
-export interface FmgNameBase {
-  name: string;
-  i: number;
-  min: number;
-  max: number;
-  d: string;
-  m: number;
-  b: string;
-}
-
-/** The slice of FMG's `Names` generator this module needs. */
-export interface FmgNames {
-  nameBases: FmgNameBase[];
-  getNameBases(): FmgNameBase[];
-  /** names a state after its capital, with a government word in front */
-  getState(name: string, culture?: number, base?: number): string;
-  clearChains(): void;
-  updateChain(index: number): void;
-}
+export type { FmgNameBase, FmgNames };
 
 /**
  * The group FMG's own machinery generates from.

@@ -544,17 +544,25 @@ var jammerWild = {
 };
 var astralJammer = {
   name: "AstralJammer",
-  max: 8,
+  max: 16,
   probability: 5,
   cultures: [
     { name: "Ethereal (Kindred)", base: "Jammer Ethereal", shield: "vesicaPiscis", odd: 1, placement: "remote" },
     { name: "Silver Kin (Kindred)", base: "Jammer Ethereal", shield: "fantasy1", odd: 0.8, placement: "any" },
+    { name: "Morning Star (Kindred)", base: "Jammer Ethereal", shield: "fantasy5", odd: 0.6, placement: "remote" },
+    { name: "Long Memory (Kindred)", base: "Jammer Ethereal", shield: "fantasy3", odd: 0.5, placement: "any" },
     { name: "Stoneborn (Deep)", base: "Jammer Stoneborn", shield: "wedged", odd: 0.9, placement: "harsh" },
     { name: "Deepkin (Deep)", base: "Jammer Stoneborn", shield: "fantasy2", odd: 0.7, placement: "harsh" },
+    { name: "Ironvein (Deep)", base: "Jammer Stoneborn", shield: "square", odd: 0.6, placement: "harsh" },
+    { name: "Old Delvers (Deep)", base: "Jammer Stoneborn", shield: "hexagon", odd: 0.5, placement: "any" },
     { name: "Wild (Ferals)", base: "Jammer Wild", shield: "moriaOrc", odd: 0.8, placement: "harsh" },
     { name: "Scavengers (Ferals)", base: "Jammer Wild", shield: "fantasy4", odd: 0.6, placement: "any" },
-    { name: "Deep Choir (Collective)", base: "Jammer Deep", shield: "pavise", odd: 0.7, placement: "any" },
-    { name: "Far Chorus (Collective)", base: "Jammer Deep", shield: "fantasy5", odd: 0.5, placement: "remote" }
+    { name: "Red Clans (Ferals)", base: "Jammer Wild", shield: "targe", odd: 0.5, placement: "harsh" },
+    { name: "The Hunt (Ferals)", base: "Jammer Wild", shield: "pavise", odd: 0.4, placement: "remote" },
+    { name: "Deep Choir (Collective)", base: "Jammer Deep", shield: "gonfalon", odd: 0.7, placement: "any" },
+    { name: "Far Chorus (Collective)", base: "Jammer Deep", shield: "flag", odd: 0.5, placement: "remote" },
+    { name: "Hollow Kin (Collective)", base: "Jammer Deep", shield: "diamond", odd: 0.5, placement: "harsh" },
+    { name: "Wandering Song (Collective)", base: "Jammer Deep", shield: "dovetail", odd: 0.4, placement: "any" }
   ]
 };
 
@@ -1208,17 +1216,25 @@ var trekSynthetic = {
 };
 var astralTrek = {
   name: "AstralTrek",
-  max: 8,
+  max: 16,
   probability: 11,
   cultures: [
     { name: "Terran (Human)", base: "Trek Terran", shield: "heater", odd: 1, placement: "temperate" },
     { name: "Colonial (Human)", base: "Trek Terran", shield: "kite", odd: 0.8, placement: "any" },
+    { name: "Expatriate (Human)", base: "Trek Terran", shield: "pennant", odd: 0.6, placement: "remote" },
+    { name: "Borderlands (Human)", base: "Trek Terran", shield: "dovetail", odd: 0.5, placement: "harsh" },
     { name: "Continental (Human)", base: "Trek Continental", shield: "french", odd: 0.9, placement: "temperate" },
     { name: "Highlander (Human)", base: "Trek Continental", shield: "hessen", odd: 0.6, placement: "harsh" },
+    { name: "Southerners (Human)", base: "Trek Continental", shield: "spanish", odd: 0.6, placement: "temperate" },
+    { name: "Islanders (Human)", base: "Trek Continental", shield: "horsehead", odd: 0.5, placement: "remote" },
     { name: "Synthetic (Machine)", base: "Trek Synthetic", shield: "hexagon", odd: 0.7, placement: "any" },
     { name: "Posthuman (Machine)", base: "Trek Synthetic", shield: "diamond", odd: 0.5, placement: "remote" },
+    { name: "Swarm (Machine)", base: "Trek Synthetic", shield: "square", odd: 0.4, placement: "harsh" },
+    { name: "Archive (Machine)", base: "Trek Synthetic", shield: "embowed", odd: 0.4, placement: "any" },
     { name: "Core Worlds (Mixed)", base: "Trek Core", shield: "gonfalon", odd: 0.8, placement: "any" },
-    { name: "Inner Reach (Mixed)", base: "Trek Core", shield: "banner", odd: 0.6, placement: "remote" }
+    { name: "Inner Reach (Mixed)", base: "Trek Core", shield: "banner", odd: 0.6, placement: "remote" },
+    { name: "Old Republic (Mixed)", base: "Trek Core", shield: "renaissance", odd: 0.5, placement: "temperate" },
+    { name: "Solar Compact (Mixed)", base: "Trek Core", shield: "baroque", odd: 0.5, placement: "any" }
   ]
 };
 
@@ -1721,17 +1737,25 @@ var grimdarkMachine = {
 };
 var grimdark = {
   name: "Grimdark",
-  max: 8,
+  max: 16,
   probability: 3,
   cultures: [
     { name: "Gothic (Darkling)", base: "Grimdark Gothic", shield: "oldFrench", odd: 1, placement: "harsh" },
     { name: "Northerners (Darkling)", base: "Grimdark Gothic", shield: "horsehead", odd: 0.8, placement: "harsh" },
+    { name: "Crownlands (Darkling)", base: "Grimdark Gothic", shield: "heater", odd: 0.7, placement: "temperate" },
+    { name: "Ash Church (Darkling)", base: "Grimdark Gothic", shield: "baroque", odd: 0.5, placement: "any" },
     { name: "Iron (Foundrymen)", base: "Grimdark Iron", shield: "square", odd: 0.9, placement: "any" },
     { name: "Yard Companies (Foundrymen)", base: "Grimdark Iron", shield: "targe", odd: 0.7, placement: "any" },
+    { name: "Slag Clans (Foundrymen)", base: "Grimdark Iron", shield: "wedged", odd: 0.6, placement: "harsh" },
+    { name: "The Great Works (Foundrymen)", base: "Grimdark Iron", shield: "gonfalon", odd: 0.5, placement: "any" },
     { name: "Machine (Cold)", base: "Grimdark Machine", shield: "embowed", odd: 0.7, placement: "remote" },
     { name: "Calculators (Cold)", base: "Grimdark Machine", shield: "diamond", odd: 0.5, placement: "any" },
-    { name: "Core Holds (Mixed)", base: "Grimdark Core", shield: "gonfalon", odd: 0.8, placement: "any" },
-    { name: "Rust Kingdoms (Mixed)", base: "Grimdark Core", shield: "pavise", odd: 0.6, placement: "remote" }
+    { name: "Null Procession (Cold)", base: "Grimdark Machine", shield: "flag", odd: 0.5, placement: "remote" },
+    { name: "The Archive (Cold)", base: "Grimdark Machine", shield: "pavise", odd: 0.4, placement: "any" },
+    { name: "Core Holds (Mixed)", base: "Grimdark Core", shield: "pennant", odd: 0.8, placement: "any" },
+    { name: "Rust Kingdoms (Mixed)", base: "Grimdark Core", shield: "dovetail", odd: 0.6, placement: "remote" },
+    { name: "Old Empire (Mixed)", base: "Grimdark Core", shield: "renaissance", odd: 0.5, placement: "temperate" },
+    { name: "The Nine Sectors (Mixed)", base: "Grimdark Core", shield: "roman", odd: 0.4, placement: "harsh" }
   ]
 };
 
@@ -1761,6 +1785,11 @@ var ASTRAL_NAME_BASES = [
 ];
 function findAstralSet(name) {
   return ASTRAL_NAME_SETS.find((set) => set.name === name);
+}
+
+// astral/mapping/pack.ts
+function currentPack() {
+  return globalThis.pack;
 }
 
 // astral/mapping/polities.ts
@@ -1864,11 +1893,7 @@ function toSystem(burg, options) {
 function systemsOf(burgs, options) {
   return burgs.filter((burg) => burg.i && !burg.removed).map((burg) => toSystem(burg, options));
 }
-
 // astral/mapping/index.ts
-function currentPack() {
-  return globalThis.pack;
-}
 function isAstralBase(names, baseId) {
   if (baseId === undefined)
     return false;
@@ -1933,20 +1958,178 @@ function installMapping(names) {
   }
   const provinces = globalThis.Provinces;
   if (provinces) {
-    const originalGenerate = provinces.generate.bind(provinces);
-    provinces.generate = () => {
-      originalGenerate();
-      applySectorNames();
-    };
-    const originalRegenerate = provinces.regenerate?.bind(provinces);
-    if (originalRegenerate) {
-      provinces.regenerate = (force) => {
-        const result = originalRegenerate(force);
+    const originalGenerate = provinces.regenerate?.bind(provinces);
+    if (originalGenerate) {
+      provinces.regenerate = (regenerateNames) => {
+        const result = originalGenerate(regenerateNames);
         applySectorNames();
         return result;
       };
     }
   }
+}
+
+// astral/state.ts
+var STORAGE_KEY = "astral.settings";
+var DEFAULTS = {
+  set: ASTRAL_NAME_SETS[0]?.name ?? "AstralTrek",
+  replaceCultures: true
+};
+function read() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw)
+      return { ...DEFAULTS };
+    const parsed = JSON.parse(raw);
+    return {
+      set: typeof parsed.set === "string" && findAstralSet(parsed.set) ? parsed.set : DEFAULTS.set,
+      replaceCultures: parsed.replaceCultures !== false
+    };
+  } catch {
+    return { ...DEFAULTS };
+  }
+}
+var settings = read();
+var listeners = new Set;
+function getSettings() {
+  return { ...settings };
+}
+function setSettings(patch) {
+  settings = { ...settings, ...patch };
+  if (!findAstralSet(settings.set))
+    settings.set = DEFAULTS.set;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  } catch {}
+  for (const listener of listeners)
+    listener(getSettings());
+  return getSettings();
+}
+function onSettingsChange(listener) {
+  listeners.add(listener);
+  return () => void listeners.delete(listener);
+}
+
+// astral/actions/apply.ts
+function seedsFor(setName, names) {
+  const set = findAstralSet(setName);
+  if (!set)
+    return [];
+  return set.cultures.map((culture) => ({
+    name: culture.name,
+    base: names.nameBases.findIndex((base) => base.name === culture.base),
+    shield: culture.shield
+  }));
+}
+var applying = false;
+var applyingSeeds = [];
+function installCultureBridge(names) {
+  const cultures = globalThis.Cultures;
+  if (!cultures)
+    return;
+  const original = cultures.getDefault.bind(cultures);
+  cultures.getDefault = (count = 0) => {
+    if (!applying)
+      return original(count);
+    return count > 0 && count < applyingSeeds.length ? applyingSeeds.slice(0, count) : applyingSeeds;
+  };
+}
+function applyAstral(names, options = {}) {
+  const settings2 = getSettings();
+  const setName = options.set ?? settings2.set;
+  const replaceCultures = options.replaceCultures ?? settings2.replaceCultures;
+  const result = { set: setName, cultures: 0, burgs: 0, states: 0, provinces: 0, missing: 0 };
+  const set = findAstralSet(setName);
+  if (!set) {
+    result.error = `Unknown name set "${setName}"`;
+    return result;
+  }
+  const pack = currentPack();
+  const cultures = globalThis.Cultures;
+  const burgs = globalThis.Burgs;
+  const states = globalThis.States;
+  const provinces = globalThis.Provinces;
+  const nameGenerator = globalThis.Names;
+  if (!pack || !cultures || !burgs || !states || !provinces || !nameGenerator) {
+    result.error = "FMG is not ready — the map could not be read";
+    return result;
+  }
+  const live = pack.cultures.filter((culture) => culture.i && !culture.removed);
+  if (!live.length) {
+    result.error = "The map has no peoples to replace — generate a map first";
+    return result;
+  }
+  const seeds = seedsFor(setName, names);
+  if (!seeds.length) {
+    result.error = `The name set "${setName}" has no peoples`;
+    return result;
+  }
+  if (replaceCultures) {
+    const centers = live.map((culture) => culture.center).filter((center) => center !== undefined);
+    const count = Math.min(centers.length, seeds.length);
+    result.missing = live.length - count;
+    for (const culture of [...live].sort((a, b) => b.i - a.i))
+      cultures.remove(culture.i);
+    applying = true;
+    applyingSeeds = seeds;
+    try {
+      for (let index = 0;index < count; index++) {
+        const seed = seeds[index];
+        const point = pack.cells.p[centers[index]];
+        if (!point)
+          continue;
+        const id = cultures.add(point[0], point[1]);
+        cultures.rename(id, seed.name);
+        cultures.setBase(id, seed.base);
+        const culture = pack.cultures[id];
+        if (culture && !culture.shield)
+          culture.shield = seed.shield;
+      }
+    } finally {
+      applying = false;
+      applyingSeeds = [];
+    }
+    result.cultures = count;
+    const wildlandsBase = seeds[0]?.base;
+    if (wildlandsBase !== undefined) {
+      try {
+        cultures.setBase(0, wildlandsBase);
+      } catch {}
+    }
+    cultures.recalculate();
+    for (const state of pack.states) {
+      if (!state.i || state.removed || state.center === undefined)
+        continue;
+      const culture = pack.cells.culture[state.center];
+      if (culture !== undefined && culture !== state.culture)
+        states.setCulture(state.i, culture);
+    }
+    states.recalculate();
+  }
+  for (const burg of pack.burgs) {
+    if (!burg.i || burg.removed)
+      continue;
+    const culture = burg.culture ?? 0;
+    const name = nameGenerator.getCulture(culture);
+    if (name && name !== burg.name) {
+      burgs.rename(burg.i, name);
+      result.burgs++;
+    }
+  }
+  for (const state of pack.states) {
+    if (!state.i || state.removed)
+      continue;
+    const capital = pack.burgs[state.capital ?? 0];
+    if (capital?.name && capital.name !== state.name) {
+      states.rename(state.i, capital.name);
+      result.states++;
+    }
+  }
+  result.states += applyPolityNames(names);
+  provinces.regenerate(true);
+  result.provinces += applySectorNames();
+  globalThis.Layers?.draw("burgIcons", "labels", "states", "provinces", "borders", "cultures");
+  return result;
 }
 
 // astral/name-bases.ts
@@ -2036,192 +2219,119 @@ function downloadPayload(payload, filename = "AstralCartographer-namesbase.txt")
   URL.revokeObjectURL(url);
 }
 
-// astral/sets.ts
-function placementScore(placement, i) {
-  const cells = globalThis.pack?.cells;
-  if (!cells)
-    return 0;
-  const height = cells.h[i] ?? 0;
-  const grid = globalThis.grid;
-  const temp = grid?.cells?.temp?.[i] ?? 0;
-  switch (placement) {
-    case "temperate":
-      return (20 - Math.abs(temp - 12)) * 0.5 + height * 0.2;
-    case "harsh":
-      return (10 - temp) * 0.8 + height * 0.3;
-    case "remote": {
-      const point = cells.p[i];
-      if (!point)
-        return height * 0.05;
-      const graph = globalThis.options?.map?.graph;
-      const width = graph?.width ?? 2000;
-      const chartHeight = graph?.height ?? 2000;
-      const dx = (point[0] ?? 0) - width / 2;
-      const dy = (point[1] ?? 0) - chartHeight / 2;
-      return Math.hypot(dx, dy) * 0.01 + height * 0.05;
-    }
-    case "any":
-    default:
-      return height * 0.3 + (10 - Math.abs(temp - 5)) * 0.2;
-  }
-}
-function culturesForSet(set, names) {
-  return set.cultures.map((culture) => ({
-    name: culture.name,
-    base: names.nameBases.findIndex((base) => base.name === culture.base),
-    shield: culture.shield,
-    odd: culture.odd ?? 1,
-    sort: (i) => placementScore(culture.placement ?? "any", i)
-  }));
-}
-function isAstralSet(id) {
-  return findAstralSet(id) !== undefined;
-}
-
-// astral/ui/culture-sets.ts
-function currentOptions() {
-  return globalThis.options;
-}
-var STORAGE_KEY = "astral.cultureSet";
-function readRememberedSet() {
-  try {
-    return localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-function rememberSet(id) {
-  try {
-    localStorage.setItem(STORAGE_KEY, id);
-  } catch {}
-}
-function addSetOptions(sets) {
-  const select = document.querySelector("#culturesSet");
-  if (!select)
-    return;
-  for (const set of sets) {
-    if (select.querySelector(`option[value="${set.name}"]`))
-      continue;
-    const option = document.createElement("option");
-    option.value = set.name;
-    option.textContent = set.name;
-    option.dataset.max = String(set.max);
-    select.append(option);
-  }
-}
-function watchForSetDropdown(sets) {
-  if (document.querySelector("#culturesSet")) {
-    addSetOptions(sets);
-    return;
-  }
-  const observer = new MutationObserver(() => {
-    if (document.querySelector("#culturesSet")) {
-      observer.disconnect();
-      addSetOptions(sets);
-    }
+// astral/ui/panel.ts
+var DIALOG_ID = "astralDialog";
+function ensureDialog() {
+  const existing = document.querySelector(`#${DIALOG_ID}`);
+  if (existing)
+    return existing;
+  const dialogs = document.querySelector("#dialogs") ?? document.body;
+  dialogs.insertAdjacentHTML("beforeend", `<div id="${DIALOG_ID}" class="dialog stable textual">
+      <div class="astral-row">
+        <span>Name set:</span>
+        <select id="astralSet" data-tip="The register the world is named in">
+          ${ASTRAL_NAME_SETS.map((set) => `<option value="${set.name}">${set.name}</option>`).join("")}
+        </select>
+      </div>
+      <div class="astral-row">
+        <label data-tip="Replace the peoples of the map, or only rename what is there">
+          <input id="astralReplace" type="checkbox" />
+          Replace the peoples of the map
+        </label>
+      </div>
+      <div class="astral-row">
+        <span>Apply:</span>
+        <button id="astralApply" class="astral-apply" data-tip="Turn this map into a star map">Apply</button>
+      </div>
+      <div id="astralStatus" class="astral-status"></div>
+      <div class="astral-row" style="justify-content: flex-end">
+        <button id="astralClose">Close</button>
+      </div>
+    </div>`);
+  const dialog = document.querySelector(`#${DIALOG_ID}`);
+  const setSelect = dialog.querySelector("#astralSet");
+  const replaceBox = dialog.querySelector("#astralReplace");
+  const status = dialog.querySelector("#astralStatus");
+  const settings2 = getSettings();
+  setSelect.value = settings2.set;
+  replaceBox.checked = settings2.replaceCultures;
+  setSelect.addEventListener("change", () => setSettings({ set: setSelect.value }));
+  replaceBox.addEventListener("change", () => setSettings({ replaceCultures: replaceBox.checked }));
+  onSettingsChange((next) => {
+    setSelect.value = next.set;
+    replaceBox.checked = next.replaceCultures;
   });
-  observer.observe(document.body, { childList: true, subtree: true });
-}
-function syncCultureInputs() {
-  const options = currentOptions();
-  const set = findAstralSet(options?.generation.cultures.set ?? "");
-  if (!set || !options)
-    return;
-  for (const input of document.querySelectorAll('[data-option="cultures"]')) {
-    input.max = String(set.max);
-    if (document.activeElement !== input)
-      input.value = String(options.generation.cultures.limit);
-  }
-}
-function installCultureSets(names, payload) {
-  const cultures = window.Cultures;
-  if (!cultures) {
-    console.error("Astral Cartographer: FMG's Cultures generator is not available — the culture sets were not installed");
-    return [];
-  }
-  let activeSetId = null;
-  const original = cultures.getDefault.bind(cultures);
-  cultures.getDefault = (count = 0) => {
-    const options2 = currentOptions();
-    const set = findAstralSet(activeSetId ?? options2?.generation.cultures.set ?? "");
-    if (!set)
-      return original(count);
-    const seeds = culturesForSet(set, names);
-    return count > 0 && count < seeds.length ? seeds.slice(0, count) : seeds;
-  };
-  const originalGenerate = cultures.generate.bind(cultures);
-  cultures.generate = () => {
-    const options2 = currentOptions();
-    const chosen = options2?.generation.cultures.set ?? "";
-    const set = findAstralSet(chosen);
-    if (!set || !options2) {
-      originalGenerate();
-      return;
-    }
-    activeSetId = set.name;
-    options2.generation.cultures.set = "world";
-    try {
-      originalGenerate();
-    } finally {
-      options2.generation.cultures.set = chosen;
-      activeSetId = null;
-    }
-  };
-  watchForSetDropdown(payload.sets);
-  const optionsModel = window.Options;
-  if (optionsModel) {
-    const originalCap = optionsModel.capCultures.bind(optionsModel);
-    optionsModel.capCultures = () => {
-      originalCap();
-      const options2 = currentOptions();
-      const set = findAstralSet(options2?.generation.cultures.set ?? "");
-      if (set && options2 && options2.generation.cultures.limit > set.max) {
-        options2.generation.cultures.limit = set.max;
-      }
-      syncCultureInputs();
-    };
-    const originalRandom = optionsModel.randomCultureSet?.bind(optionsModel);
-    if (originalRandom) {
-      optionsModel.randomCultureSet = () => {
-        const current = currentOptions()?.generation.cultures.set ?? "";
-        if (isAstralSet(current))
-          return current;
-        return originalRandom();
-      };
-    }
-    const originalApplyLoaded = optionsModel.applyLoaded.bind(optionsModel);
-    optionsModel.applyLoaded = (json) => {
-      originalApplyLoaded(json);
-      const remembered2 = readRememberedSet();
-      const options2 = currentOptions();
-      if (remembered2 && isAstralSet(remembered2) && options2) {
-        options2.generation.cultures.set = remembered2;
-        window.Options?.capCultures();
-      }
-    };
-  }
-  document.addEventListener("change", (event) => {
-    const target = event.target;
-    if (target?.id !== "culturesSet")
-      return;
-    if (isAstralSet(target.value))
-      rememberSet(target.value);
-    syncCultureInputs();
+  dialog.querySelector("#astralClose").addEventListener("click", () => closeDialog());
+  dialog.querySelector("#astralApply").addEventListener("click", () => {
+    const result = runApply();
+    status.innerHTML = describe(result);
+    status.className = result.error ? "astral-status error" : "astral-status";
   });
-  const remembered = readRememberedSet();
-  const options = currentOptions();
-  if (remembered && isAstralSet(remembered) && options) {
-    options.generation.cultures.set = remembered;
-    window.Options?.capCultures();
+  return dialog;
+}
+function runApply(names) {
+  const generator = names ?? globalThis.Names;
+  if (!generator) {
+    return { set: getSettings().set, cultures: 0, burgs: 0, states: 0, provinces: 0, missing: 0, error: "FMG is not ready" };
   }
-  return payload.sets.map((set) => set.name);
+  return applyAstral(generator);
+}
+function describe(result) {
+  if (result.error)
+    return `<span style="color:#a00">${result.error}</span>`;
+  const parts = [
+    result.cultures ? `${result.cultures} peoples replaced` : "",
+    result.burgs ? `${result.burgs} systems renamed` : "",
+    result.states ? `${result.states} polities named` : "",
+    result.provinces ? `${result.provinces} sectors named` : ""
+  ].filter(Boolean);
+  const missing = result.missing ? ` — ${result.missing} peoples the set could not supply were left out` : "";
+  return parts.length ? `Applied ${result.set}: ${parts.join(", ")}${missing}.` : `Applied ${result.set}: nothing to change.`;
+}
+function openPanel() {
+  const dialog = ensureDialog();
+  const jQuery = globalThis.$;
+  if (jQuery) {
+    jQuery(`#${DIALOG_ID}`).dialog({
+      title: "Astral Cartographer",
+      width: "28em",
+      position: { my: "center", at: "center", of: "svg" },
+      close: closeDialog
+    });
+  } else {
+    dialog.style.display = "block";
+  }
+}
+function closeDialog() {
+  const jQuery = globalThis.$;
+  if (jQuery)
+    jQuery(`#${DIALOG_ID}`).dialog("destroy");
+  document.querySelector(`#${DIALOG_ID}`)?.remove();
+}
+function installPanel(names) {
+  const tools = document.querySelector("#toolsContent");
+  if (tools && !document.querySelector("#astralTool")) {
+    tools.insertAdjacentHTML("beforeend", `<div class="options-table">
+        <button id="astralTool" data-tip="Turn this map into a star map">Astral Cartographer</button>
+      </div>`);
+    document.querySelector("#astralTool").addEventListener("click", () => openPanel());
+  }
+  const commands = window.MAP_COMMANDS;
+  if (commands && !commands.some((command) => command.id === "astral")) {
+    commands.push({
+      id: "astral",
+      name: "Open Astral Cartographer",
+      aliases: "astral cartographer star map sci-fi space apply",
+      run: () => openPanel()
+    });
+  }
 }
 
 // astral/entry.ts
-function currentOptions2() {
+var VERSION = "0.4.0";
+function currentOptions() {
   return globalThis.options;
 }
-var VERSION = "0.3.0";
 function boot() {
   if (typeof window === "undefined")
     return;
@@ -2232,15 +2342,19 @@ function boot() {
   }
   installNameBases(names);
   const payload = buildPayload(names);
-  const sets = installCultureSets(names, payload);
   installMapping(names);
+  installCultureBridge(names);
+  installPanel(names);
   window.Astral = {
     version: VERSION,
     sets: ASTRAL_NAME_SETS,
     nameBases: ASTRAL_NAME_BASES,
+    settings: () => getSettings(),
     payload: () => buildPayload(names),
     download: () => downloadPayload(buildPayload(names)),
-    systems: () => systemsOf(globalThis.pack?.burgs ?? [], currentOptions2()),
+    systems: () => systemsOf(globalThis.pack?.burgs ?? [], currentOptions()),
+    open: () => openPanel(),
+    apply: () => runApply(names),
     applyMapping: () => applyPolityNames(names) + applySectorNames(),
     pool: (baseName, group) => {
       const base = ASTRAL_NAME_BASES.find((candidate) => candidate.name === baseName);
@@ -2250,7 +2364,7 @@ function boot() {
       installNameBases(names);
     }
   };
-  console.info(`Astral Cartographer ${VERSION}: pushed ${payload.bases.length} name bases in ${sets.length} culture sets — ${ASTRAL_NAME_SETS.map((set) => set.name).join(", ")}`);
+  console.info(`Astral Cartographer ${VERSION}: ${payload.bases.length} name bases in ${ASTRAL_NAME_SETS.length} sets — ${ASTRAL_NAME_SETS.map((set) => set.name).join(", ")}. Press Apply to turn the map into a star map.`);
 }
 boot();
 if (typeof window !== "undefined" && window.__ASTRAL_DEV__) {
