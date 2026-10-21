@@ -10,6 +10,7 @@
  */
 import { describe, expect, test } from "bun:test";
 import { ASTRAL_NAME_BASES, ASTRAL_NAME_SETS, findAstralBase, findAstralSet, poolOf } from "../astral/content/naming/index.ts";
+import { findStockBase } from "../astral/content/naming/stock.ts";
 import {
   installNameBases,
   mergeNameBases,
@@ -28,7 +29,7 @@ function fakeNames(bases: FmgNameBase[] = []): FmgNames & { chainUpdates: number
     getNameBases: () => bases,
     getState: (name: string) => `${name}ia`,
     getCulture: () => "Somewhere",
-    clearChains: () => {},
+    clearChains: () => { },
     updateChain: (index: number) => {
       names.chainUpdates.push(index);
     },
@@ -199,9 +200,126 @@ describe("the naming content", () => {
     });
   }
 
-  test("the registers do not share a name", () => {
-    const all = ASTRAL_NAME_BASES.flatMap((base) => poolOf(base, "systems"));
-    expect(new Set(all).size).toBe(all.length);
+  test("the bases of one set do not share a name", () => {
+    // A map only ever carries one set's peoples, so the rule is per set.
+    // Two *sets* may draw on the same stock pool — both AstralTrek and
+    // Grimdark want FMG's "Elven" — and that is not a conflict.
+    for (const set of ASTRAL_NAME_SETS) {
+      const all = ASTRAL_NAME_BASES.filter((base) => base.set === set.name).flatMap((base) => poolOf(base, "systems"));
+      expect(new Set(all).size).toBe(all.length);
+    }
+  });
+});
+
+describe("the bases built from FMG's own data", () => {
+  test("every one of them names a base FMG really has", () => {
+    for (const base of ASTRAL_NAME_BASES) {
+      if (!base.stock) continue;
+      expect(findStockBase(base.stock)).toBeDefined();
+    }
+  });
+
+  test("they keep FMG's own pool, and their own name", () => {
+    // "Trek English" is FMG's "English" plus our polity words — the pool
+    // is FMG's, and the name is ours, so the stock base is never displaced
+    const trekEnglish = findAstralBase("Trek English")!;
+    const stock = findStockBase("English")!;
+    expect(trekEnglish.stock).toBe("English");
+    expect(trekEnglish.min).toBe(stock.min);
+    expect(trekEnglish.max).toBe(stock.max);
+    expect(trekEnglish.d).toBe(stock.d);
+    expect(poolOf(trekEnglish, "systems")).toContain("Cambridge");
+  });
+
+  test("they do not displace the stock bases of the same name", () => {
+    // FMG's own array already holds a base called "English"; ours is
+    // "Trek English", so the merge appends rather than replaces
+    const names = fakeNames();
+    installNameBases(names);
+    expect(names.nameBases.find((base) => base.name === "English")).toBeUndefined();
+    expect(names.nameBases.find((base) => base.name === "Trek English")).toBeDefined();
+  });
+
+  test("a name two bases would share is kept by only one of them", () => {
+    // FMG's Elven and Dark Elven share 41 names
+    const elven = findAstralBase("Trek Elven")!;
+    const dark = findAstralBase("Trek Dark Elven")!;
+    const shared = poolOf(elven, "systems").filter((name) => poolOf(dark, "systems").includes(name));
+    expect(shared.length).toBe(0);
+  });
+
+  test("the peoples of AstralTrek name from a base of ours", () => {
+    const set = findAstralSet("AstralTrek")!;
+    expect(set.cultures).toHaveLength(16);
+    for (const culture of set.cultures) {
+      expect(findAstralBase(culture.base)).toBeDefined();
+    }
+  });
+
+  test("two sets may draw on the same stock pool", () => {
+    // Both AstralTrek and Grimdark want FMG's "Elven". A map only ever
+    // carries one set's peoples, so this is not a conflict — and the
+    // second set's base must keep its whole pool.
+    const trek = findAstralBase("Trek Elven")!;
+    const grimdark = findAstralBase("Grimdark Elven")!;
+    expect(trek.stock).toBe("Elven");
+    expect(grimdark.stock).toBe("Elven");
+    expect(poolOf(trek, "systems").length).toBeGreaterThan(100);
+    expect(poolOf(grimdark, "systems").length).toBeGreaterThan(100);
+  });
+
+  test("every base of a set keeps enough names to name a whole map", () => {
+    for (const base of ASTRAL_NAME_BASES) {
+      expect(poolOf(base, "systems").length).toBeGreaterThanOrEqual(50);
+    }
+  });
+});
+
+describe("the Grimdark set", () => {
+  test("holds seventeen peoples, each naming from a base of ours", () => {
+    const set = findAstralSet("Grimdark")!;
+    expect(set.cultures).toHaveLength(17);
+    for (const culture of set.cultures) {
+      const base = findAstralBase(culture.base);
+      expect(base).toBeDefined();
+      expect(base!.set).toBe("Grimdark");
+    }
+  });
+
+  test("every base of the set has a people naming from it", () => {
+    // a base with no people is a base that never gets used
+    const set = findAstralSet("Grimdark")!;
+    const used = new Set(set.cultures.map((culture) => culture.base));
+    for (const base of ASTRAL_NAME_BASES) {
+      if (base.set !== "Grimdark") continue;
+      expect(used.has(base.name)).toBe(true);
+    }
+  });
+
+  test("no longer ships the Iron base", () => {
+    expect(findAstralBase("Grimdark Iron")).toBeUndefined();
+  });
+
+  test("covers the peoples of the register", () => {
+    const set = findAstralSet("Grimdark")!;
+    const bases = set.cultures.map((culture) => culture.base);
+    // the Imperium's provinces, the Precursors, the Weavers and their dark
+    // kin, the Chaos legions and the swarms
+    for (const base of [
+      "Grimdark Roman",
+      "Grimdark Nordic",
+      "Grimdark Finnic",
+      "Grimdark Levantine",
+      "Grimdark Nahuatl",
+      "Grimdark Amazigh",
+      "Grimdark Elven",
+      "Grimdark Dark Elven",
+      "Grimdark Orc",
+      "Grimdark Draconic",
+      "Grimdark Arachnid",
+    ]) {
+      expect(bases).toContain(base);
+    }
   });
 });
 
@@ -227,7 +345,8 @@ describe("mergeNameBases", () => {
     expect(bases[0]!.name).toBe("German");
     expect(bases[1]!.name).toBe("English");
     expect(bases[2]!.name).toBe("Trek Core");
-    expect(changed).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    // every base of ours is appended, and every one of them is rebuilt
+    expect(changed).toEqual(ASTRAL_NAME_BASES.map((base, index) => index + 2));
   });
 
   test("replaces our own base in place, keeping its index", () => {

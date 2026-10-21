@@ -28,9 +28,13 @@ astral/
     index.ts            the mapping, installed over FMG's generators
   content/naming/ the content
     types.ts              the model: a set, a base, a culture, a group
-    astral-trek.ts        the set, and its four bases
+    stock.ts              FMG's own 43 name bases, vendored
+    derive.ts             building our bases from FMG's
+    astral-trek.ts        the set, and its four hand-written bases
+    astral-trek-derived.ts the set's twelve bases, built from FMG's data
     astral-jammer.ts      the set, and its four bases
-    grimdark.ts           the set, and its four bases
+    grimdark.ts           the set, and its three hand-written bases
+    grimdark-derived.ts   the set's eleven bases, built from FMG's data
     index.ts              the registry
   ui/panel.ts     the mod's panel
   build/          bundle + inject pipeline (see ../README.md)
@@ -52,12 +56,29 @@ AstralTrek                      a set
 ├── Trek Core          a base   classical stars, federations
 ├── Trek Terran        a base   modern settlement names
 ├── Trek Continental    a base   modern settlement names, another Europe
-└── Trek Synthetic      a base   machine designations
+├── Trek Synthetic      a base   machine designations
+├── Trek English       a base   built from FMG's "English"
+├── Trek German        a base   built from FMG's "German"
+├── Trek Chinese       a base   built from FMG's "Chinese"
+├── Trek Nigerian      a base   built from FMG's "Nigerian"
+├── Trek Vietnamese    a base   built from FMG's "Vietnamese"
+├── Trek Arabic        a base   built from FMG's "Arabic"
+├── Trek Karnataka     a base   built from FMG's "Karnataka"
+├── Trek Orc           a base   built from FMG's "Orc"
+├── Trek Goblin        a base   built from FMG's "Goblin"
+├── Trek Elven         a base   built from FMG's "Elven"
+├── Trek Dark Elven    a base   built from FMG's "Dark Elven"
+└── Trek Arachnid      a base   built from FMG's "Arachnid"
 ```
 
-Each set holds eight cultures, two per base — the way FMG's High Fantasy
-gives Elves two cultures and Dwarves two. Each culture says where its
-homeland goes (`temperate`, `harsh`, `remote`, `any`).
+Each set holds sixteen cultures. Each culture says where its homeland goes
+(`temperate`, `harsh`, `remote`, `any`).
+
+The bases built from FMG's own data keep FMG's pool of names and add only
+the polity words — the institutions the people call things by. They carry a
+"Trek" prefix so they never displace the stock base of the same name: FMG's
+own array already holds a base called "English", and our merge appends
+rather than replaces, so FMG's own culture sets keep working.
 
 ## What the mod will do
 

@@ -1,11 +1,15 @@
 import type { AstralNameBase, AstralNameSet } from "./types.ts";
 
 /**
- * **Grimdark** — the set of harsh, industrial science fiction.
+ * **Grimdark** — Dune and Warhammer 40K with the serial numbers filed off.
  *
- * Underneath it: the **dark fantasy** bases, reskinned — the bleak north, the
- * foundry, the machine that does not care — and the **new** ones, the ones
- * that were never fantasy at all.
+ * Underneath it: the **Imperium** — its Latin, Nordic, Finnic and Levantine
+ * provinces — the **Precursors**, the ancient machine empires that predate
+ * it; the **Weavers** and their dark kin; the **Chaos legions**; and the
+ * **swarms**.
+ *
+ * The bases built from FMG's own data live in `grimdark-derived.ts`; the
+ * three written by hand are here.
  */
 export const grimdarkCore: AstralNameBase = {
   name: "Grimdark Core",
@@ -272,11 +276,11 @@ export const grimdarkGothic: AstralNameBase = {
       "Wraithcliff",
       "Barrowlight",
       "Coldchapel",
-      
+
       "Eastmourn",
       "Fallowgrief",
       "Griethelm",
-      
+
       "Karrowgrief",
       "Lochgrief",
       "Marrowgrief",
@@ -311,109 +315,6 @@ export const grimdarkGothic: AstralNameBase = {
       "The Mourne Compact",
       "The Drowned Kingdom",
       "The Crows",
-    ],
-  },
-};
-
-/**
- * **Grimdark Iron** — the works. The industrial base, reskinned: the foundry
- * floor, the ore hopper, the shift bell.
- */
-export const grimdarkIron: AstralNameBase = {
-  name: "Grimdark Iron",
-  set: "Grimdark",
-  min: 4,
-  max: 11,
-  d: "rdkltn",
-  groups: {
-    systems: [
-      "Foundry",
-      "Kilnworks",
-      "Slagheap",
-      "Bellows",
-      "Anvilhold",
-      "Steamworks",
-      "Boltworks",
-      "Ironworks",
-      "Forgehall",
-      "Smelter",
-      "Rivet",
-      "Girder Yard",
-      "Pressworks",
-      "Cogstack",
-      "Turbine",
-      "Ashfall Works",
-      "Gasholder",
-      "Cinderhall",
-      "Clinkerfield",
-      "Furnace",
-      "Blast House",
-      "Cupola",
-      "Cupola Yard",
-      "Rolling Mill",
-      "Wireworks",
-      "Cinderpath",
-      "Crucible",
-      "Drosspit",
-      "Enginehouse",
-      "Flue Tower",
-      "Forgepit",
-      "Gantry Row",
-      "Ingot",
-      "Ladle",
-      "Moulding Floor",
-      "Ore Hopper",
-      "Piston Row",
-      "Quench Pit",
-      "Reduction",
-      "Scrapheap",
-      "Sinter",
-      "Slagline",
-      "Steamvent",
-      "Tapping Floor",
-      "Trundle",
-      "Belt Drive",
-      "Chimney Head",
-      "Coke Works",
-      "Conveyor",
-      "Drossbin",
-      "Emberbed",
-      "Fluebank",
-      "Gantry Head",
-      "Hopper Row",
-      "Ingot Hall",
-      "Kiln Bank",
-      "Ladle Pit",
-      "Moulding Hall",
-      "Ore Yard",
-      "Pig Yard",
-      "Rolling Row",
-      "Slag Bank",
-      "Tapping Hall",
-      "Wharf",
-      "Yard Head",
-      "Zinc Works",
-    ],
-    polities: [
-      "The Foundries",
-      "The Great Works",
-      "The Mill Combine",
-      "The Industrial Combine",
-      "The Foremanate",
-      "The Charter of Works",
-      "The Smelting League",
-      "The Yard Companies",
-      "The Workyard Combine",
-      "The Steamsyndicate",
-      "The Foundry Compact",
-      "The Ore Combine",
-      "The Chain of Works",
-      "The Plant",
-      "The Works",
-      "The Company Towns",
-      "The Smelter Compact",
-      "The Yard Council",
-      "The Bellows Compact",
     ],
   },
 };
@@ -469,7 +370,7 @@ export const grimdarkMachine: AstralNameBase = {
       "Vacancy",
       "Nullfield",
       "Greyscale",
-      
+
       "Hollowcode",
       "Blackroot",
       "Deadband",
@@ -494,7 +395,7 @@ export const grimdarkMachine: AstralNameBase = {
       "Rimlight",
       "Silverbank",
       "Threadbare",
-      
+
       "Voidmark",
       "Whitlock",
       "Zerolock",
@@ -526,27 +427,35 @@ export const grimdarkMachine: AstralNameBase = {
   },
 };
 
-/** The set: the harsh, industrial register, and the peoples under it. */
+/**
+ * The set: the harsh register, and the peoples under it.
+ *
+ * The peoples are drawn from FMG's own culture sets — the Imperium's
+ * provinces (Roman, Nordic, Finnic, Levantine), the Precursors
+ * (Nahuatl, Amazigh), the Weavers and their dark kin (Elven, Dark Elven),
+ * the Chaos legions (Orc, Draconic) and the swarms (Arachnid).
+ */
 export const grimdark: AstralNameSet = {
   name: "Grimdark",
-  max: 16,
+  max: 17,
   probability: 3,
   cultures: [
-    { name: "Gothic (Darkling)", base: "Grimdark Gothic", shield: "oldFrench", odd: 1, placement: "harsh" },
-    { name: "Northerners (Darkling)", base: "Grimdark Gothic", shield: "horsehead", odd: 0.8, placement: "harsh" },
-    { name: "Crownlands (Darkling)", base: "Grimdark Gothic", shield: "heater", odd: 0.7, placement: "temperate" },
-    { name: "Ash Church (Darkling)", base: "Grimdark Gothic", shield: "baroque", odd: 0.5, placement: "any" },
-    { name: "Iron (Foundrymen)", base: "Grimdark Iron", shield: "square", odd: 0.9, placement: "any" },
-    { name: "Yard Companies (Foundrymen)", base: "Grimdark Iron", shield: "targe", odd: 0.7, placement: "any" },
-    { name: "Slag Clans (Foundrymen)", base: "Grimdark Iron", shield: "wedged", odd: 0.6, placement: "harsh" },
-    { name: "The Great Works (Foundrymen)", base: "Grimdark Iron", shield: "gonfalon", odd: 0.5, placement: "any" },
+    { name: "Imperium (Human)", base: "Grimdark Roman", shield: "roman", odd: 1, placement: "temperate" },
+    { name: "Nordic (Human)", base: "Grimdark Nordic", shield: "horsehead", odd: 0.9, placement: "harsh" },
+    { name: "Finnic (Human)", base: "Grimdark Finnic", shield: "wedged", odd: 0.8, placement: "harsh" },
+    { name: "Levantine (Human)", base: "Grimdark Levantine", shield: "pavise", odd: 0.9, placement: "harsh" },
+    { name: "Precursor (Machine)", base: "Grimdark Nahuatl", shield: "diamond", odd: 0.5, placement: "any" },
+    { name: "Sovereign (Machine)", base: "Grimdark Amazigh", shield: "oval", odd: 0.5, placement: "remote" },
+    { name: "Weaver (Elven)", base: "Grimdark Elven", shield: "noldor", odd: 0.9, placement: "any" },
+    { name: "Caste (Elven)", base: "Grimdark Elven", shield: "gonfalon", odd: 0.6, placement: "any" },
+    { name: "Dark Kin (Dark Elven)", base: "Grimdark Dark Elven", shield: "hessen", odd: 0.8, placement: "harsh" },
+    { name: "Legion (Chaos)", base: "Grimdark Orc", shield: "urukHai", odd: 1, placement: "harsh" },
+    { name: "Warp Horde (Chaos)", base: "Grimdark Orc", shield: "moriaOrc", odd: 0.7, placement: "harsh" },
+    { name: "Cinder (Chaos)", base: "Grimdark Draconic", shield: "fantasy2", odd: 0.7, placement: "harsh" },
+    { name: "Hive (Swarm)", base: "Grimdark Arachnid", shield: "hexagon", odd: 0.9, placement: "any" },
+    { name: "Brood (Swarm)", base: "Grimdark Arachnid", shield: "horsehead2", odd: 0.8, placement: "harsh" },
     { name: "Machine (Cold)", base: "Grimdark Machine", shield: "embowed", odd: 0.7, placement: "remote" },
-    { name: "Calculators (Cold)", base: "Grimdark Machine", shield: "diamond", odd: 0.5, placement: "any" },
-    { name: "Null Procession (Cold)", base: "Grimdark Machine", shield: "flag", odd: 0.5, placement: "remote" },
-    { name: "The Archive (Cold)", base: "Grimdark Machine", shield: "pavise", odd: 0.4, placement: "any" },
+    { name: "Gothic (Darkling)", base: "Grimdark Gothic", shield: "oldFrench", odd: 1, placement: "harsh" },
     { name: "Core Holds (Mixed)", base: "Grimdark Core", shield: "pennant", odd: 0.8, placement: "any" },
-    { name: "Rust Kingdoms (Mixed)", base: "Grimdark Core", shield: "dovetail", odd: 0.6, placement: "remote" },
-    { name: "Old Empire (Mixed)", base: "Grimdark Core", shield: "renaissance", odd: 0.5, placement: "temperate" },
-    { name: "The Nine Sectors (Mixed)", base: "Grimdark Core", shield: "roman", odd: 0.4, placement: "harsh" },
   ],
 };

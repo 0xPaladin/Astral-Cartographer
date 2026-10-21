@@ -1,3 +1,4 @@
+import { buildStockBase, type StockBaseSpec } from "./derive.ts";
 import type { AstralNameBase, AstralNameSet } from "./types.ts";
 
 /**
@@ -678,27 +679,34 @@ export const trekSynthetic: AstralNameBase = {
   },
 };
 
-/** The set: the clean, optimistic register, and the peoples under it. */
+/**
+ * The set: the clean, optimistic register, and the peoples under it.
+ *
+ * The peoples are drawn from FMG's own culture sets — the real-world ones
+ * (English, German, Chinese, Nigerian, Vietnamese, Arabic, Karnataka) and
+ * the fantasy ones (Orc, Goblin, Elven, Dark Elven, Arachnid) — and each
+ * one takes its names from the matching base of ours.
+ */
 export const astralTrek: AstralNameSet = {
   name: "AstralTrek",
   max: 16,
   probability: 11,
   cultures: [
     { name: "Terran (Human)", base: "Trek Terran", shield: "heater", odd: 1, placement: "temperate" },
-    { name: "Colonial (Human)", base: "Trek Terran", shield: "kite", odd: 0.8, placement: "any" },
-    { name: "Expatriate (Human)", base: "Trek Terran", shield: "pennant", odd: 0.6, placement: "remote" },
-    { name: "Borderlands (Human)", base: "Trek Terran", shield: "dovetail", odd: 0.5, placement: "harsh" },
-    { name: "Continental (Human)", base: "Trek Continental", shield: "french", odd: 0.9, placement: "temperate" },
-    { name: "Highlander (Human)", base: "Trek Continental", shield: "hessen", odd: 0.6, placement: "harsh" },
-    { name: "Southerners (Human)", base: "Trek Continental", shield: "spanish", odd: 0.6, placement: "temperate" },
-    { name: "Islanders (Human)", base: "Trek Continental", shield: "horsehead", odd: 0.5, placement: "remote" },
+    { name: "Colonial (English)", base: "Trek English", shield: "kite", odd: 0.8, placement: "any" },
     { name: "Synthetic (Machine)", base: "Trek Synthetic", shield: "hexagon", odd: 0.7, placement: "any" },
-    { name: "Posthuman (Machine)", base: "Trek Synthetic", shield: "diamond", odd: 0.5, placement: "remote" },
     { name: "Swarm (Machine)", base: "Trek Synthetic", shield: "square", odd: 0.4, placement: "harsh" },
-    { name: "Archive (Machine)", base: "Trek Synthetic", shield: "embowed", odd: 0.4, placement: "any" },
-    { name: "Core Worlds (Mixed)", base: "Trek Core", shield: "gonfalon", odd: 0.8, placement: "any" },
-    { name: "Inner Reach (Mixed)", base: "Trek Core", shield: "banner", odd: 0.6, placement: "remote" },
-    { name: "Old Republic (Mixed)", base: "Trek Core", shield: "renaissance", odd: 0.5, placement: "temperate" },
-    { name: "Solar Compact (Mixed)", base: "Trek Core", shield: "baroque", odd: 0.5, placement: "any" },
+    { name: "Continental (German)", base: "Trek German", shield: "french", odd: 0.9, placement: "temperate" },
+    { name: "Eastern (Chinese)", base: "Trek Chinese", shield: "banner", odd: 0.9, placement: "temperate" },
+    { name: "Heartland (Nigerian)", base: "Trek Nigerian", shield: "vesicaPiscis", odd: 0.8, placement: "temperate" },
+    { name: "River (Vietnamese)", base: "Trek Vietnamese", shield: "oval", odd: 0.8, placement: "temperate" },
+    { name: "Arabic", base: "Trek Arabic", shield: "round", odd: 0.8, placement: "harsh" },
+    { name: "Southerners (Karnataka)", base: "Trek Karnataka", shield: "spanish", odd: 0.6, placement: "temperate" },
+    { name: "Warriors (Orc)", base: "Trek Orc", shield: "moriaOrc", odd: 1, placement: "harsh" },
+    { name: "Warriors (Goblin)", base: "Trek Goblin", shield: "urukHai", odd: 1, placement: "harsh" },
+    { name: "Contemplative (Elven)", base: "Trek Elven", shield: "noldor", odd: 1, placement: "temperate" },
+    { name: "Secretive (Dark Elven)", base: "Trek Dark Elven", shield: "hessen", odd: 0.9, placement: "harsh" },
+    { name: "Alien (Arachnid)", base: "Trek Arachnid", shield: "horsehead2", odd: 0.7, placement: "any" },
+    { name: "Silicate (Arachnid)", base: "Trek Arachnid", shield: "hexagon", odd: 0.5, placement: "harsh" },
   ],
 };

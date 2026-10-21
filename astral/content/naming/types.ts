@@ -21,12 +21,42 @@
 /** The kinds of thing a base can name. */
 export type AstralNameGroup = "systems" | "polities";
 
+/**
+ * A name base in FMG's own shape — the data FMG ships.
+ *
+ * `b` is the pool: the sample names, comma-separated. FMG builds a Markov
+ * chain from it and generates new names out of it.
+ */
+export interface StockNameBase {
+  /** the name of the base */
+  name: string;
+  /** the index of the base, in FMG's own array */
+  i: number;
+  /** minimum length of generated names */
+  min: number;
+  /** maximum length of generated names */
+  max: number;
+  /** letters that may be doubled */
+  d: string;
+  /** multi-word name rate (deprecated by FMG) */
+  m: number;
+  /** the pool, comma-separated */
+  b: string;
+}
+
 /** One vocabulary. */
 export interface AstralNameBase {
   /** the name shown in FMG's Namesbase Editor */
   name: string;
   /** the set this base belongs to */
   set: string;
+  /**
+   * The FMG base this one is built from, if it is one.
+   *
+   * A base with this set keeps FMG's own name and its own pool: it is the
+   * same vocabulary, with a set of polity words added to it.
+   */
+  stock?: string;
   /** recommended minimum length of generated names */
   min: number;
   /** recommended maximum length of generated names */
