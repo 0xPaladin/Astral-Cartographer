@@ -3,6 +3,22 @@
 **A star-sector map mod for
 [Azgaar's Fantasy Map Generator](https://azgaar.github.io/Fantasy-Map-Generator/).**
 
+> [!IMPORTANT]
+> **Archived — this mod now lives in the unified fork.** Astral Cartographer's content — the three
+> culture sets and the twelve name bases — was merged into
+> [0xPaladin/Fantasy-Map-Generator](https://github.com/0xPaladin/Fantasy-Map-Generator) as core
+> data (the fork's merge plan, Phase A). The sets are in the _Cultures set_ dropdown, the bases
+> are in the namebase catalogue, and the `polities` name groups ride along as core data.
+>
+> Two things improved on the way in: the sets can now be pinned like any stock set (the mod had to
+> work around FMG's set-id validation), and the naming no longer needs a payload pushed into the
+> page — the content is simply part of the generator.
+>
+> **This repository is read-only from here on.** Its vendored FMG client and the dev harness are
+> retired; the fork has one workflow: `bun dev`. The remaining work — the visual reskin and the
+> polity/sector naming — continues in the fork. See `docs/plans/mod-merge-plan.md` there for the
+> decision record, and `docs/astral/README.md` there for the feature's documentation.
+
 > **Status: the panel and the action.** The harness, the content model (three
 > culture sets, twelve name bases), and the panel that applies them to a map
 > are working. The visual reskin — the galactic plane, the nebulae, the
