@@ -7,8 +7,12 @@ generator.
 ## Where it is now
 
 The mod ships **three culture sets** and the **name bases** underneath them,
-and offers the sets in FMG's "Cultures set" dropdown. Nothing else yet — the
-visual reskin and the data mapping are the next steps.
+offers the sets in FMG's "Cultures set" dropdown, and **maps FMG's world onto
+a star map**: burgs are star systems with a class and traits, states are
+polities named by their culture's own words, provinces are sectors.
+
+The visual reskin — the galactic plane, the nebulae, the system markers — is
+the next step.
 
 ```
 astral/
@@ -17,6 +21,10 @@ astral/
   sets.ts         our sets as FMG culture sets: the cultures, and where they go
   payload.ts      the whole mod's data as one JSON: bases, and sets with the
                   base ids linked — what gets pushed into FMG on load
+  mapping/        FMG's world, read as a star map
+    systems.ts          a burg as a star system: a class, and traits
+    polities.ts         a state as a polity, a province as a sector
+    index.ts            the mapping, installed over FMG's generators
   content/naming/ the content
     types.ts              the model: a set, a base, a culture, a group
     astral-trek.ts        the set, and its four bases

@@ -29,6 +29,8 @@ export interface FmgNameBase {
 export interface FmgNames {
   nameBases: FmgNameBase[];
   getNameBases(): FmgNameBase[];
+  /** names a state after its capital, with a government word in front */
+  getState(name: string, culture?: number, base?: number): string;
   clearChains(): void;
   updateChain(index: number): void;
 }

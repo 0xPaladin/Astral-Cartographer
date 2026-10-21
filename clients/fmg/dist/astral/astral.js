@@ -1763,6 +1763,192 @@ function findAstralSet(name) {
   return ASTRAL_NAME_SETS.find((set) => set.name === name);
 }
 
+// astral/mapping/polities.ts
+var SECTOR_WORDS = [
+  "Sector",
+  "Reach",
+  "Cluster",
+  "Belt",
+  "Orbit",
+  "Shelf",
+  "Quadrant",
+  "Frontier"
+];
+function pickFor(words, seed) {
+  if (!words.length)
+    return;
+  let hash = 0;
+  for (let i = 0;i < seed.length; i++)
+    hash = hash * 31 + seed.charCodeAt(i) >>> 0;
+  return words[hash % words.length];
+}
+function polityBase(names, culture) {
+  const pack = globalThis.pack;
+  const baseId = pack?.cultures?.[culture]?.base;
+  if (baseId === undefined)
+    return;
+  const name = names.nameBases[baseId]?.name;
+  return ASTRAL_NAME_BASES.find((base) => base.name === name);
+}
+function polityWordFor(names, culture, stateName) {
+  const base = polityBase(names, culture);
+  if (!base)
+    return;
+  const words = poolOf(base, "polities").filter((word) => !/\bof\b/i.test(word));
+  return pickFor(words, stateName);
+}
+function sectorWordFor(provinceName) {
+  return pickFor(SECTOR_WORDS, provinceName);
+}
+
+// astral/mapping/systems.ts
+var TRAITS = {
+  port: "shipyard",
+  citadel: "bastion",
+  plaza: "civic core",
+  shanty: "drift",
+  temple: "shrine",
+  walls: "shielding"
+};
+function starClass(population) {
+  if (population < 2000)
+    return { class: "M", name: "red dwarf" };
+  if (population < 1e4)
+    return { class: "K", name: "orange dwarf" };
+  if (population < 50000)
+    return { class: "G", name: "yellow dwarf" };
+  if (population < 250000)
+    return { class: "F", name: "white-yellow star" };
+  if (population < 1e6)
+    return { class: "A", name: "white star" };
+  return { class: "B", name: "blue giant" };
+}
+function peopleOf(burg, options) {
+  const population = options?.map?.units?.population;
+  const scale = population?.scale ?? 1000;
+  const rate = population?.urbanization?.rate ?? 0.1;
+  return Math.round((burg.population ?? 0) * scale * rate);
+}
+function systemTraits(burg) {
+  const traits = [];
+  if (burg.port)
+    traits.push(TRAITS.port);
+  if (burg.citadel)
+    traits.push(TRAITS.citadel);
+  if (burg.plaza)
+    traits.push(TRAITS.plaza);
+  if (burg.shanty)
+    traits.push(TRAITS.shanty);
+  if (burg.temple)
+    traits.push(TRAITS.temple);
+  if (burg.walls)
+    traits.push(TRAITS.walls);
+  return traits;
+}
+function toSystem(burg, options) {
+  const population = peopleOf(burg, options);
+  const { class: starType, name: className } = starClass(population);
+  return {
+    id: burg.i,
+    name: burg.name ?? "",
+    class: starType,
+    className,
+    population,
+    traits: systemTraits(burg),
+    state: burg.state ?? 0,
+    culture: burg.culture ?? 0,
+    capital: !!burg.capital,
+    port: !!burg.port
+  };
+}
+function systemsOf(burgs, options) {
+  return burgs.filter((burg) => burg.i && !burg.removed).map((burg) => toSystem(burg, options));
+}
+
+// astral/mapping/index.ts
+function currentPack() {
+  return globalThis.pack;
+}
+function isAstralBase(names, baseId) {
+  if (baseId === undefined)
+    return false;
+  const name = names.nameBases[baseId]?.name;
+  return ASTRAL_NAME_BASES.some((base) => base.name === name);
+}
+function applyPolityNames(names, stateIds) {
+  const pack = currentPack();
+  const states = globalThis.States;
+  if (!pack || !states)
+    return 0;
+  let renamed = 0;
+  for (const state of pack.states) {
+    if (!state.i || state.removed || !state.name)
+      continue;
+    if (stateIds && !stateIds.includes(state.i))
+      continue;
+    const word = polityWordFor(names, state.culture ?? 0, state.name);
+    if (!word)
+      continue;
+    states.setForm(state.i, word);
+    renamed++;
+  }
+  return renamed;
+}
+function applySectorNames() {
+  const pack = currentPack();
+  const provinces = globalThis.Provinces;
+  if (!pack || !provinces)
+    return 0;
+  let renamed = 0;
+  for (const province of pack.provinces) {
+    if (!province.i || province.removed || !province.name)
+      continue;
+    const word = sectorWordFor(province.name);
+    if (!word)
+      continue;
+    provinces.setForm(province.i, word);
+    renamed++;
+  }
+  return renamed;
+}
+function installMapping(names) {
+  const originalGetState = names.getState.bind(names);
+  names.getState = (name, culture, base) => {
+    const pack = currentPack();
+    const resolved = base ?? pack?.cultures?.[culture ?? 0]?.base;
+    if (isAstralBase(names, resolved))
+      return name;
+    return originalGetState(name, culture, base);
+  };
+  const states = globalThis.States;
+  if (states) {
+    const originalDefineForms = states.defineStateForms?.bind(states);
+    if (originalDefineForms) {
+      states.defineStateForms = (list) => {
+        const result = originalDefineForms(list);
+        applyPolityNames(names, list ?? undefined);
+        return result;
+      };
+    }
+  }
+  const provinces = globalThis.Provinces;
+  if (provinces) {
+    const originalGenerate = provinces.generate.bind(provinces);
+    provinces.generate = () => {
+      originalGenerate();
+      applySectorNames();
+    };
+    const originalRegenerate = provinces.regenerate?.bind(provinces);
+    if (originalRegenerate) {
+      provinces.regenerate = (force) => {
+        const result = originalRegenerate(force);
+        applySectorNames();
+        return result;
+      };
+    }
+  }
+}
+
 // astral/name-bases.ts
 var PRIMARY_GROUP = "systems";
 function toFmgNameBase(base, index) {
@@ -2032,7 +2218,10 @@ function installCultureSets(names, payload) {
 }
 
 // astral/entry.ts
-var VERSION = "0.2.0";
+function currentOptions2() {
+  return globalThis.options;
+}
+var VERSION = "0.3.0";
 function boot() {
   if (typeof window === "undefined")
     return;
@@ -2044,12 +2233,15 @@ function boot() {
   installNameBases(names);
   const payload = buildPayload(names);
   const sets = installCultureSets(names, payload);
+  installMapping(names);
   window.Astral = {
     version: VERSION,
     sets: ASTRAL_NAME_SETS,
     nameBases: ASTRAL_NAME_BASES,
     payload: () => buildPayload(names),
     download: () => downloadPayload(buildPayload(names)),
+    systems: () => systemsOf(globalThis.pack?.burgs ?? [], currentOptions2()),
+    applyMapping: () => applyPolityNames(names) + applySectorNames(),
     pool: (baseName, group) => {
       const base = ASTRAL_NAME_BASES.find((candidate) => candidate.name === baseName);
       return base ? poolOf(base, group) : [];

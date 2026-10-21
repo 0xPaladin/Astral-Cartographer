@@ -8,11 +8,17 @@
  * set from the Jammer bases, and Grimdark from Grimdark.
  */
 import { ASTRAL_NAME_BASES, ASTRAL_NAME_SETS, poolOf, type AstralNameBase, type AstralNameGroup } from "./content/naming/index.ts";
+import { installMapping, systemsOf, applyPolityNames, applySectorNames, type PopulationOptions, type StarSystem } from "./mapping/index.ts";
 import { installNameBases, type FmgNames } from "./name-bases.ts";
 import { buildPayload, downloadPayload, type AstralPayload } from "./payload.ts";
 import { installCultureSets } from "./ui/culture-sets.ts";
 
-export const VERSION = "0.2.0";
+/** FMG's current options — read fresh, never captured. */
+function currentOptions(): PopulationOptions | undefined {
+  return (globalThis as { options?: PopulationOptions }).options;
+}
+
+export const VERSION = "0.3.0";
 
 /** The mod's public surface, exposed on `window.Astral` for the console. */
 export interface AstralApi {
@@ -25,6 +31,10 @@ export interface AstralApi {
   payload(): AstralPayload;
   /** download the bases in FMG's namesbase file format, for a manual install */
   download(): void;
+  /** every burg on the map, read as a star system */
+  systems(): StarSystem[];
+  /** name the polities and the sectors again, by hand */
+  applyMapping(): number;
   /** the pool of one group of one base */
   pool(baseName: string, group: AstralNameGroup): string[];
   /** register the bases again (after a map load, or by hand) */
@@ -53,6 +63,7 @@ function boot(): void {
   installNameBases(names);
   const payload = buildPayload(names);
   const sets = installCultureSets(names, payload);
+  installMapping(names);
 
   window.Astral = {
     version: VERSION,
@@ -60,6 +71,8 @@ function boot(): void {
     nameBases: ASTRAL_NAME_BASES,
     payload: () => buildPayload(names),
     download: () => downloadPayload(buildPayload(names)),
+    systems: () => systemsOf((globalThis as { pack?: { burgs: never[] } }).pack?.burgs ?? [], currentOptions()),
+    applyMapping: () => applyPolityNames(names) + applySectorNames(),
     pool: (baseName, group) => {
       const base = ASTRAL_NAME_BASES.find((candidate) => candidate.name === baseName);
       return base ? poolOf(base, group) : [];

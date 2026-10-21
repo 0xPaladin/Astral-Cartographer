@@ -26,20 +26,20 @@ export interface FmgCultureSeed {
   sort: (i: number) => number;
 }
 
+/** FMG keeps the temperature on the grid graph, not on the packed cells. */
+interface FmgGrid {
+  cells?: { temp?: number[] };
+}
+
 /** The slice of FMG's packed graph the placement scorers read. */
 interface FmgCells {
   h: number[];
   p: number[][];
 }
 
-/** FMG keeps the temperature on the grid graph, not on the packed cells. */
-interface FmgGrid {
-  cells?: { temp?: number[] };
-}
-
 declare global {
   interface Window {
-    pack?: { cells: FmgCells };
+    grid?: FmgGrid;
   }
 }
 

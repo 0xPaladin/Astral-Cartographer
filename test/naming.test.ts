@@ -26,6 +26,7 @@ function fakeNames(bases: FmgNameBase[] = []): FmgNames & { chainUpdates: number
     nameBases: bases,
     chainUpdates: [] as number[],
     getNameBases: () => bases,
+    getState: (name: string) => `${name}ia`,
     clearChains: () => {},
     updateChain: (index: number) => {
       names.chainUpdates.push(index);

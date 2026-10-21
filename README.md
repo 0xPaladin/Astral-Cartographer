@@ -186,6 +186,60 @@ yet: FMG validates the set id against a schema built at load time, so a set of
 ours is repaired to a stock one when a map is read — the mod puts it back
 afterwards, and the map's own cultures are untouched.
 
+### The mapping — FMG's world, read as a star map
+
+The naming layer puts the right *words* on the map. The mapping layer puts the
+right *meanings* on it.
+
+| FMG | Astral Cartographer | How |
+|---|---|---|
+| burg | **star system** | the name is already a system name; the class comes from the population, the traits from the installations |
+| state | **polity** | named by its capital's system — "Compact of Gant", not "Gantia" — with the word taken from the `polities` group of its own culture's base |
+| province | **sector** | "Gant Sector", "Sarn Reach" |
+| population | the system's people | the class follows: a hamlet is a red dwarf, a capital is a blue giant |
+
+**Star classes.** The population of a system decides its class, the way the
+size of a town decides whether it is a hamlet or a capital:
+
+| People | Class | Name |
+|---|---|---|
+| under 2 000 | M | red dwarf |
+| under 10 000 | K | orange dwarf |
+| under 50 000 | G | yellow dwarf |
+| under 250 000 | F | white-yellow star |
+| under 1 000 000 | A | white star |
+| over | B | blue giant |
+
+**Traits.** FMG's burg installations become the system's installations: a
+port is a **shipyard**, a citadel a **bastion**, a plaza a **civic core**, a
+shanty a **drift**, a temple a **shrine**, walls are **shielding**.
+
+**Polity words.** A state's word comes from the `polities` group of the base
+its own culture names from, so a Grimdark polity is a "Compact" or a
+"Hegemony" and a Trek one a "Federation" or a "Directorate". A stock culture
+keeps FMG's own word: the mod renames the sci-fi world, not the fantasy one.
+
+A word that carries its own "of" is not used in front of a state's name —
+"Church of the Ashen Star of Starvalere" is not a name, it is a sentence.
+
+**What it looks like.** With the AstralTrek set:
+
+| | |
+|---|---|
+| states | "Earth Assembly of Uperowga", "Quantum Assembly of De", "Border Worlds of Caphiuch", "Mankind Compact of Elmswaldha" |
+| provinces | "Yaxford Belt", "Yaxhall Reach", "Aulacurus Shelf", "Mebhenah Quadrant" |
+| systems | "Frorere — G-class, 37 252 people, shipyard / bastion / civic core / shrine" |
+
+**No fantasy suffix.** FMG turns a capital's name into a state name by
+adding "ia" — "Gant" becomes "Gantia". Ours do not: a polity is named by the
+system that holds it.
+
+The mapping is applied where FMG generates — after the states, after the
+provinces — so a map the user has edited keeps the names it has, and only a
+fresh generation gets the new ones. The system's class and traits are data
+for now, available in the console as `Astral.systems()`; the visual step
+draws them.
+
 ### Registration — the payload, pushed on load
 
 Installing a name base in FMG by hand is four steps: download the file, open
@@ -325,8 +379,8 @@ Built in steps, each one leaving the project working.
 | # | Step | What lands |
 |---|---|---|
 | 0 | **Harness** ✅ | README, dev server, vendored FMG |
-| 1 | **Naming** ✅ | three culture sets and the twelve bases under them, registered into FMG and offered in the Cultures set dropdown — *this step* |
-| 2 | **Data mapping** | read FMG's burgs as star systems: population → star class, features → system traits, and name states and cultures from the `polities` group instead of from the capital's name |
+| 1 | **Naming** ✅ | three culture sets and the twelve bases under them, registered into FMG and offered in the Cultures set dropdown |
+| 2 | **Data mapping** ✅ | burgs read as star systems (class from the population, traits from the installations), states as polities, provinces as sectors — *this step* |
 | 3 | **Visual reskin** | the galactic plane: void background, nebula fields, system markers, system labels — a new FMG layer |
 | 4 | **Style presets** | sci-fi map styles (dark chart, sensor sweep, blueprint) as FMG style presets |
 | 5 | **Generators** | the generators themselves: "elevation" → star density, "rivers" → hyperlanes, "mountains" → nebulae |
